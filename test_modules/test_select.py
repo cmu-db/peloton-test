@@ -22,5 +22,5 @@ def test_select_all():
     pgfile = dbop.sql_exe_pg('../peloton_test.conf', SQL, 'select.pg')
     ptfile = dbop.sql_exe_pt('../peloton_test.conf', SQL, 'select.pt')
     res = fileop.compare_results(pgfile, ptfile)
-    assert(r == True)
+    assert(res == True)
 
