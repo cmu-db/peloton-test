@@ -4,18 +4,22 @@
 #
 import sys
 sys.path.append("..")
-from common import utils
+from common import randop
 
 def create_sql_in_withindex():
-    var_age = utils.create_random_int(1,100)
-    sql = '''SELECT * from COMPANY where age > %d'''%var_age
+    name = randop.create_random_string(6)
+    sql = "SELECT * from COMPANY where id IN (SELECT id FROM CORP where name = 'Paul')"
     return sql
 
 def create_sql_in_noindex():
-    var_age = utils.create_random_int(1,100)
-    sql = '''SELECT * from COMPANY where age > %d'''%var_age
+    rowkey = randop.create_random_int(1,10000)
+    sql = "SELECT * from COMPANY where age IN (SELECT age FROM CORP where id < %d )"%rowkey
+    return sql
 
-
+def create_sql_in_noanyindex():
+    name = randop.create_random_string(6)
+    sql = "SELECT * from COMPANY where age IN (SELECT age FROM CORP where name = 'Paul')"
+    return sql
 ######################################
 #     Test                           #
 ######################################

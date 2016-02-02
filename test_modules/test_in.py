@@ -8,7 +8,7 @@ import os
 import filecmp
 import sys
 sys.path.append("..")
-from sql import SELECT
+from sql import IN
 from common import fileop
 from common import dbop
 
@@ -18,13 +18,24 @@ from common import dbop
 #    sql_pg()
 #    sql_pt()
     
-#def test_results():
-#    r = compare_results()
-#    assert(r == True)
+def test_in_withindex():
+    SQL = IN.create_sql_in_withindex()
+    pgfile = dbop.sql_exe_pg('../peloton_test.conf', SQL, 'in_index.pg')
+    ptfile = dbop.sql_exe_pt('../peloton_test.conf', SQL, 'in_index.pt')
+    res = fileop.compare_results(pgfile, ptfile)
+    assert(res == True)
 
-SQL = SELECT.create_sql_select_all()
-pgfile = dbop.sql_exe_pg('../peloton_test.conf', SQL, 'select.pg')
-ptfile = dbop.sql_exe_pt('../peloton_test.conf', SQL, 'select.pt')
-res = fileop.compare_results(pgfile, ptfile)
+def test_in_noindex():
+    SQL = IN.create_sql_in_noindex()
+    pgfile = dbop.sql_exe_pg('../peloton_test.conf', SQL, 'in_noindex.pg')
+    ptfile = dbop.sql_exe_pt('../peloton_test.conf', SQL, 'in_noindex.pt')
+    res = fileop.compare_results(pgfile, ptfile)
+    assert(res == True)
 
-print "%s"%res
+def test_in_noanyindex():
+    SQL = IN.create_sql_in_noanyindex()
+    pgfile = dbop.sql_exe_pg('../peloton_test.conf', SQL, 'in_noanyindex.pg')
+    ptfile = dbop.sql_exe_pt('../peloton_test.conf', SQL, 'in_noanyindex.pt')
+    res = fileop.compare_results(pgfile, ptfile)
+    assert(res == True)
+
