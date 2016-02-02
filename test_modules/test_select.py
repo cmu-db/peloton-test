@@ -18,14 +18,14 @@ from common import dbop
     
 def test_select_where():
     SQL = SELECT.create_sql_select_where()
-    pgfile = dbop.sql_exe_pg('../peloton_test.conf', SQL, 'select_where.pg')
-    ptfile = dbop.sql_exe_pt('../peloton_test.conf', SQL, 'select_where.pt')
+    pgfile = dbop.sql_exe_pg('../peloton_test.conf', SQL, 'select_where.out')
+    ptfile = dbop.sql_exe_pt('../peloton_test.conf', SQL, 'select_where.out')
     res = fileop.compare_results(pgfile, ptfile)
     assert(res == True)
 
 def test_select_all():
     SQL = SELECT.create_sql_select_all()
-    pgfile = dbop.sql_exe_pg('../peloton_test.conf', SQL, 'select_all.pg')
-    ptfile = dbop.sql_exe_pt('../peloton_test.conf', SQL, 'select_all.pt')
+    pgfile = dbop.sql_exe_pg('../peloton_test.conf', SQL, 'select_all.out')
+    ptfile = dbop.sql_exe_pt('../peloton_test.conf', SQL, 'select_all.out')
     res = fileop.compare_results(pgfile, ptfile)
     assert(res == True)
