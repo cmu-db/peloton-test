@@ -85,7 +85,7 @@ def parse_conf_peloton(file_path):
 if __name__ == '__main__':
     #create_output()
     #create_output_dir('../aaaaaaaaaaaaaaaaaaaaaaaa')
-    #b = compare_results('../output/pg_in.out','../output/a.out')
-    #print (b)
+    b = compare_results('../output/a.out','../output/b.out')
+    print (b)
     addr = parse_conf_peloton('../peloton_test.conf')
     print (addr)

@@ -7,11 +7,12 @@ import psycopg2
 import os
 import filecmp
 import fileop
+from collections import Counter
 
 ##################################################
 #             Postgres Execution                 #
 ##################################################
-def sql_exe_pg(conf_path, SQL, filename):
+def sql_exe_pg_tofile(conf_path, SQL, filename):
 
     path = '../output/'
     file_path = path + filename
@@ -61,10 +62,46 @@ def sql_exe_pg(conf_path, SQL, filename):
 
     return file_path
 
+### Execute SQL and put the result into multiset(counter) ### 
+def sql_exe_pg(conf_path, SQL):
+
+    addr = fileop.parse_conf_peloton(conf_path)
+
+    try:
+        # Connect to database
+        conn = psycopg2.connect(database=addr['database'], user=addr['user'], password=addr['password'], host=addr['host'], port=addr['port'])
+        print "Connect testdb successfully"
+
+        # Get the db handler
+        cur = conn.cursor()
+
+        # Execute SQL statement
+        cur.execute(SQL)
+
+        # Get the data
+        rows = cur.fetchall()
+        
+        res = Counter()
+        # write the data into multiset
+        for row in rows:
+            res[row] = res[row] + 1
+            print (row)
+
+    except psycopg2.DatabaseError, e:
+        print "Unable to execute postgres:%s"%e
+        sys.exit(1)
+
+    finally:
+        if conn:
+            conn.close()
+
+    return res
+
+
 ##################################################
 #             Peloton  Execution                 #
 ##################################################
-def sql_exe_pt(conf_path, SQL, filename):
+def sql_exe_pt_tofile(conf_path, SQL, filename):
 
     path = '../output/'
     file_path = path + filename
@@ -114,11 +151,51 @@ def sql_exe_pt(conf_path, SQL, filename):
 
     return file_path
 
+### Execute SQL and put the result into multiset(counter) ### 
+def sql_exe_pt(conf_path, SQL):
+
+    addr = fileop.parse_conf_peloton(conf_path)
+
+    try:
+        # Connect to database
+        conn = psycopg2.connect(database=addr['database'], user=addr['user'], password=addr['password'], host=addr['host'], port=addr['port'])
+        print "Connect testdb successfully"
+
+        # Get the db handler
+        cur = conn.cursor()
+
+        # Execute SQL statement
+        cur.execute(SQL)
+
+        # Get the data
+        rows = cur.fetchall()
+
+        res = Counter()
+        # write the data into multiset
+        for row in rows:
+            res[row] = res[row] + 1
+            print (row)
+
+    except psycopg2.DatabaseError, e:
+        print "Unable to execute postgres:%s"%e
+        sys.exit(1)
+
+    finally:
+        if conn:
+            conn.close()
+
+    return res
+
 ######################################
 #     Test                           #
 ######################################
 if __name__ == '__main__':
-    a = sql_exe_pg('../peloton_test.conf', 'SELECT * FROM company', 'pg_in.out')
-    b = sql_exe_pt('../peloton_test.conf', 'SELECT * FROM company', 'pt_in.out')
+    a = sql_exe_pg_tofile('../peloton_test.conf', 'SELECT * FROM company', 'pg_in.out')
+    b = sql_exe_pt_tofile('../peloton_test.conf', 'SELECT * FROM company', 'pt_in.out')
     print (a)
     print (b)
+
+    c = sql_exe_pg('../peloton_test.conf', 'SELECT * FROM company where age <5')
+    d = sql_exe_pt('../peloton_test.conf', 'SELECT * FROM company where age <5')
+    print c
+    print d
