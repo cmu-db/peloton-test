@@ -115,8 +115,16 @@ def sql_exe_pt_tofile(conf_path, SQL, filename):
         # Get the db handler
         cur = conn.cursor()
 
+        # Insert data
+        insert_data(conn, 'company', 100)
+        insert_data(conn, 'corp', 100)
+
         # Execute SQL statement
         cur.execute(SQL)
+        
+        # Insert data
+        insert_data(conn, 'company', 100)
+        insert_data(conn, 'corp', 100)
 
         # Get the data
         rows = cur.fetchall()
@@ -163,10 +171,14 @@ def sql_exe_pt(conf_path, SQL):
 
         # Get the db handler
         cur = conn.cursor()
-
+        
+        # insert data
+        insert_data(conn, 'company', 100)
+        insert_data(conn, 'corp', 100)
+        
         # Execute SQL statement
         cur.execute(SQL)
-
+    
         # Get the data
         rows = cur.fetchall()
 
@@ -185,17 +197,54 @@ def sql_exe_pt(conf_path, SQL):
             conn.close()
 
     return res
+######################################
+#         Insert data                #
+######################################
+def insert_data(conn, table, amount):
+    namelist =    ['Adam', 'Paul', 'Lisa', 'Andy', 'Mike']
+    agelist  =    [10, 20, 30, 40, 50] 
+    addresslist = ['California','Pittsburgh','Newyork','Texas','Beijing']
+
+    try:
+        cur = conn.cursor();
+        cur.execute("DROP TABLE IF EXISTS %s"%table)
+        cur.execute('''CREATE TABLE %s
+            (ID INT PRIMARY KEY,
+            NAME           TEXT,
+            AGE            INT,
+            ADDRESS        CHAR(50));'''%table)
+
+        for rowkey in range(1, amount):
+            i = rowkey%5 - 1
+            name = namelist[i]
+            age = agelist[i]
+            address = addresslist[i]
+            data = (rowkey, name, age, address) 
+            query_pre = "INSERT INTO %s (ID,NAME,AGE,ADDRESS)"%table
+            query = query_pre + " VALUES (%s, %s, %s, %s);"
+            print (query)
+            print (data)
+            cur.execute(query, data)
+
+        conn.commit()
+        print "Batch insert successfully"
+    
+    except psycopg2.DatabaseError, e: 
+        print 'Error %s' % e    
+        sys.exit(1)
 
 ######################################
 #     Test                           #
 ######################################
 if __name__ == '__main__':
-    a = sql_exe_pg_tofile('../peloton_test.conf', 'SELECT * FROM company', 'pg_in.out')
-    b = sql_exe_pt_tofile('../peloton_test.conf', 'SELECT * FROM company', 'pt_in.out')
-    print (a)
-    print (b)
+    #a = sql_exe_pg_tofile('../peloton_test.conf', 'SELECT * FROM company', 'pg_in.out')
+    #b = sql_exe_pt_tofile('../peloton_test.conf', 'SELECT * FROM company', 'pt_in.out')
+    #print (a)
+    #print (b)
 
-    c = sql_exe_pg('../peloton_test.conf', 'SELECT * FROM company where age <5')
-    d = sql_exe_pt('../peloton_test.conf', 'SELECT * FROM company where age <5')
-    print c
+    #c = sql_exe_pg('../peloton_test.conf', 'SELECT * FROM company where age <5')
+    d = sql_exe_pt('../peloton_test.conf', 'SELECT * FROM company where age <15')
+    #print c
     print d
+    
+    # insert_data('', 'company', 31)
