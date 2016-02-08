@@ -7,7 +7,7 @@ import psycopg2
 import os
 import filecmp
 import sys
-sys.path.append("..")
+
 from sql import IN
 from common import fileop
 from common import dbop

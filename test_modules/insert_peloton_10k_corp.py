@@ -3,9 +3,9 @@
 # Small script to show PostgreSQL and Pyscopg together
 #
 
-import psycopg2
 import sys
-sys.path.append("..")
+import psycopg2
+
 from common import randop
 from common import fileop
 
