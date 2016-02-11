@@ -1,0 +1,9 @@
+# TODO:
+# Set environment
+# Create data folder
+# Replace postgresql.conf with custom config file
+# Use local pg_ctl to start with local data folder
+# use local create user to connect to custom host and port and create test user
+# psycopg2 to connect and create test database
+# psycopg2 to test if db is created
+
