@@ -59,11 +59,6 @@ class TableBuilder():
         attr = Attribute(self.__nextName(), TYPE_INT, attrUnique=unique)
         self.attributes.append(attr)
     ## DEF
-    
-    def addIntColumn(self, unique=False):
-        attr = Attribute(self.__nextName(), TYPE_INT, attrUnique=unique)
-        self.attributes.append(attr)
-    ## DEF
         
     
     
