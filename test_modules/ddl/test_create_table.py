@@ -5,16 +5,17 @@ import sys
 basedir = os.path.realpath(os.path.dirname(__file__))
 sys.path.append(os.path.join(basedir, "..", ".."))
 
-from common import BaseTest
-from common import Table
+import common
+LOG = common.LOG
 
-import logging
-LOG = logging.getLogger()
+# FIXME
+# Need to figure out how to get the config path from the commandline
+configPath = os.path.realpath(os.path.join(basedir, "../../test.conf"))
 
-class TestCreateTable(BaseTest):
+class TestCreateTable(common.BaseTest):
     
-    def __init__(self, configPath):
-        BaseTest.__init__(self, configPath, self.__class__.__name__)
+    def __init__(self, testName):
+        common.BaseTest.__init__(self, testName, configPath, self.__class__.__name__)
     
     def setUp(self):
         self.dropTables()
@@ -23,16 +24,16 @@ class TestCreateTable(BaseTest):
         """Check that the DBMS supports tables with a single attribute with and without a pkey"""
         
         for primaryKey in [False, True]:
-            for attrType in ALL_TYPES:
+            for attrType in common.ALL_TYPES:
                 tableName = self.nextTableName()
                 LOG.info("%s -> %s // primaryKey=%s" % (tableName, attrType, primaryKey))
                 
-                t = Table(tableName, self.getOracleConn())
+                t = common.Table(tableName, self.getOracleConn())
                 t.addAttribute(attrType, primaryKey=primaryKey)
                 t.create()
                 
                 # Check to make sure that the table was created
-                self.assertIn(tableName, self.getTestTables())
+                self.assertIn(tableName, self.getTestTables(self.getOracleConn()))
                 LOG.info("%s -> CREATED!" % tableName)
             ## FOR
         ## FOR

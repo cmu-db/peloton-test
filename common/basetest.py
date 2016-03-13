@@ -7,24 +7,28 @@ import logging
 
 from ConfigParser import RawConfigParser
 
-logging.basicConfig(level = logging.INFO,
-                    format="[%(funcName)s:%(lineno)03d] %(levelname)-5s: %(message)s",
-                    datefmt="%m-%d-%Y %H:%M:%S",
-                    stream = sys.stdout)
 LOG = logging.getLogger()
+LOG_handler = logging.StreamHandler()
+LOG_formatter = logging.Formatter(fmt='%(asctime)s [%(funcName)s:%(lineno)03d] %(levelname)-5s: %(message)s',
+                                  datefmt='%m-%d-%Y %H:%M:%S')
+LOG_handler.setFormatter(LOG_formatter)
+LOG.addHandler(LOG_handler)
+LOG.setLevel(logging.INFO)
 
 class BaseTest(unittest.TestCase):
     """Base test case code that will connect to the oracle and target database"""
     DB_ORACLE = "oracle"
     DB_TARGET = "target"
     
-    def __init__(self, configPath, baseName):
+    def __init__(self, testName, configPath, baseName):
+        unittest.TestCase.__init__(self, testName)
         self.tableCtr = 0
         
         # Basename for all tables in this test
         self.baseName = baseName.lower()
         
         # Load in configuration file
+        LOG.info("Loading config file '%s'" % configPath)
         self.config = RawConfigParser()
         self.config.read(configPath)
         
@@ -78,7 +82,11 @@ class BaseTest(unittest.TestCase):
     ## DEF
     
     def setUp(self):
-        pass
+        self.dropTables()
+    ## DEF
+    
+    def tearDown(self):
+        self.dropTables()
     ## DEF
     
 ## CLASS

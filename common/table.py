@@ -3,10 +3,9 @@
 import os
 import sys
 import logging
-
 import sqlalchemy 
 
-LOG = logging.getLogger(__name__)
+from basetest import LOG
 
 # ==================================================================
 
@@ -78,10 +77,9 @@ class Table():
             raise Exception("Unsupported type '%s'" % attrType)
         
         attrName = self.__nextName()
-        targetAttrType = "sqlalchemy.sql.sqltypes.%s" % ALL_TYPES_MAPPINGS[attrType]
-        if attrLength != None:
-            targetAttrType += "(%d)" % attrLength
-        eval("attrType = " + targetAttrType)
+        targetAttrType = "sqlalchemy.sql.sqltypes.%s" % ALL_TYPES_MAPPINGS[attrType].__name__
+        targetAttrType += "()" if attrLength is None else "(%d)" % attrLength
+        attrType = eval(targetAttrType)
 
         attr = sqlalchemy.Column(attrName, attrType, 
                                  primary_key=primaryKey,
@@ -89,7 +87,7 @@ class Table():
                                  unique=attrUnique)
     ## DEF
         
-    def create():
+    def create(self):
         assert not self.table is None
         LOG.info("Creating table '%s'" % self.tableName)
         self.table.create()
