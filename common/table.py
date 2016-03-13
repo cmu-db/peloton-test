@@ -85,11 +85,15 @@ class Table():
                                  primary_key=primaryKey,
                                  nullable=attrNull,
                                  unique=attrUnique)
+        self.table.append_column(attr)
+        LOG.info("Added attribute %s" % (attr))
     ## DEF
         
     def create(self):
         assert not self.table is None
         LOG.info("Creating table '%s'" % self.tableName)
+        if self.table.exists():
+            self.table.drop(checkfirst=False)
         self.table.create()
     ## DEF
     

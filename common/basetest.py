@@ -4,6 +4,7 @@ import sys
 import psycopg2
 import unittest
 import logging
+from pprint import pprint
 
 from ConfigParser import RawConfigParser
 
@@ -15,10 +16,11 @@ LOG_handler.setFormatter(LOG_formatter)
 LOG.addHandler(LOG_handler)
 LOG.setLevel(logging.INFO)
 
+DB_ORACLE = "oracle"
+DB_TARGET = "target"
+
 class BaseTest(unittest.TestCase):
     """Base test case code that will connect to the oracle and target database"""
-    DB_ORACLE = "oracle"
-    DB_TARGET = "target"
     
     def __init__(self, testName, configPath, baseName):
         unittest.TestCase.__init__(self, testName)
@@ -33,7 +35,7 @@ class BaseTest(unittest.TestCase):
         self.config.read(configPath)
         
         # Initialize database connections
-        for db in [BaseTest.DB_ORACLE, BaseTest.DB_TARGET]:
+        for db in [DB_ORACLE, DB_TARGET]:
             try:
                 self.__dict__[db] = psycopg2.connect(
                     host=self.config.get(db, 'db_host'),
@@ -57,10 +59,10 @@ class BaseTest(unittest.TestCase):
     ## DEF
     
     def getTargetConn(self):
-        return self.__dict__[BaseTest.DB_TARGET]
+        return self.__dict__[DB_TARGET]
 
     def getOracleConn(self):
-        return self.__dict__[BaseTest.DB_ORACLE]
+        return self.__dict__[DB_ORACLE]
     
     def getTestTables(self, db):
         cursor = self.__dict__[db].cursor()
@@ -69,11 +71,11 @@ class BaseTest(unittest.TestCase):
              WHERE table_name LIKE %s
                AND table_catalog !~ '^(pg_|sql_)'
             """, (self.baseName+'_%',))
-        return [ x for x in cursor.fetchall() ]
+        return [ x[0] for x in cursor.fetchall() ]
     ## DEF
     
     def dropTables(self):
-        for db in [BaseTest.DB_ORACLE, BaseTest.DB_TARGET]:
+        for db in [DB_ORACLE, DB_TARGET]:
             LOG.debug("Dropping %s.%s tables" % (db, self.baseName))
             cursor = self.__dict__[db].cursor()
             for tableName in self.getTestTables(db):
@@ -82,11 +84,13 @@ class BaseTest(unittest.TestCase):
     ## DEF
     
     def setUp(self):
-        self.dropTables()
+        #self.dropTables()
+        pass
     ## DEF
     
     def tearDown(self):
         self.dropTables()
+        pass
     ## DEF
     
 ## CLASS

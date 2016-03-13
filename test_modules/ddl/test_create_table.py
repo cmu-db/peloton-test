@@ -23,7 +23,7 @@ class TestCreateTable(common.BaseTest):
     def testSingleAttribute(self):
         """Check that the DBMS supports tables with a single attribute with and without a pkey"""
         
-        for primaryKey in [False, True]:
+        for primaryKey in [True, False]:
             for attrType in common.ALL_TYPES:
                 tableName = self.nextTableName()
                 LOG.info("%s -> %s // primaryKey=%s" % (tableName, attrType, primaryKey))
@@ -33,7 +33,7 @@ class TestCreateTable(common.BaseTest):
                 t.create()
                 
                 # Check to make sure that the table was created
-                self.assertIn(tableName, self.getTestTables(self.getOracleConn()))
+                self.assertIn(tableName, self.getTestTables(common.DB_ORACLE))
                 LOG.info("%s -> CREATED!" % tableName)
             ## FOR
         ## FOR
