@@ -7,7 +7,11 @@ import logging
 
 from ConfigParser import RawConfigParser
 
-LOG = logging.getLogger(__name__)
+logging.basicConfig(level = logging.INFO,
+                    format="[%(funcName)s:%(lineno)03d] %(levelname)-5s: %(message)s",
+                    datefmt="%m-%d-%Y %H:%M:%S",
+                    stream = sys.stdout)
+LOG = logging.getLogger()
 
 class BaseTest(unittest.TestCase):
     """Base test case code that will connect to the oracle and target database"""
@@ -15,6 +19,8 @@ class BaseTest(unittest.TestCase):
     DB_TARGET = "target"
     
     def __init__(self, configPath, baseName):
+        self.tableCtr = 0
+        
         # Basename for all tables in this test
         self.baseName = baseName.lower()
         
@@ -39,6 +45,18 @@ class BaseTest(unittest.TestCase):
             LOG.debug("Connected to %s database" % db.upper())
         ## FOR
     ## DEF
+    
+    def nextTableName(self):
+        name = "%s_%02d" % (self.baseName, self.tableCtr)
+        self.tableCtr += 1
+        return name
+    ## DEF
+    
+    def getTargetConn(self):
+        return self.__dict__[BaseTest.DB_TARGET]
+
+    def getOracleConn(self):
+        return self.__dict__[BaseTest.DB_ORACLE]
     
     def getTestTables(self, db):
         cursor = self.__dict__[db].cursor()

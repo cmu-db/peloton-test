@@ -40,20 +40,25 @@ SQL_TYPES = {
         "BOOLEAN": sqlalchemy.types.Boolean,
     }
 }
-ALL_TYPES = { }
+ALL_TYPES = [ ]
+ALL_TYPES_MAPPINGS = { }
 for category in SQL_TYPES:
     for x,y in SQL_TYPES[category].items():
         varName = "TYPE_%s" % x
         globals()[varName] = x
-        ALL_TYPES[x] = y # SQL_TYPES[category])
+        ALL_TYPES_MAPPINGS[x] = y
+        if not y is None: ALL_TYPES.append(x)
 ## FOR
 
 # ==================================================================
 
 
-class TableBuilder():
+class Table():
     
-    def __init__(self, engine, tableName):
+    def __init__(self, tableName, conn):
+        def getconn(): return (conn)
+        engine = sqlalchemy.create_engine('postgresql+psycopg2://', creator=getconn)
+        
         self.engine = engine
         self.metadata = sqlalchemy.MetaData(bind=self.engine)
         self.tableName = tableName
@@ -69,11 +74,11 @@ class TableBuilder():
     def addAttribute(self, attrType, primaryKey=False, attrLength=None, attrNull=True, attrUnique=False):
         if not attrType in ALL_TYPES:
             raise Exception("Unknown type '%s'" % attrType)
-        if ALL_TYPES[attrType] is None:
+        if ALL_TYPES_MAPPINGS[attrType] is None:
             raise Exception("Unsupported type '%s'" % attrType)
         
         attrName = self.__nextName()
-        targetAttrType = "sqlalchemy.sql.sqltypes.%s" % ALL_TYPES[attrType]
+        targetAttrType = "sqlalchemy.sql.sqltypes.%s" % ALL_TYPES_MAPPINGS[attrType]
         if attrLength != None:
             targetAttrType += "(%d)" % attrLength
         eval("attrType = " + targetAttrType)
@@ -86,6 +91,7 @@ class TableBuilder():
         
     def create():
         assert not self.table is None
+        LOG.info("Creating table '%s'" % self.tableName)
         self.table.create()
     ## DEF
     
