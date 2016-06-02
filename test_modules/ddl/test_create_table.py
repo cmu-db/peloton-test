@@ -16,10 +16,11 @@ class TestCreateTable(common.BaseTest):
     
     def __init__(self, testName):
         common.BaseTest.__init__(self, testName, configPath, self.__class__.__name__)
-    
-    def setUp(self):
-        self.dropTables()
-    
+
+    # def setUp(self):
+    #     LOG.info("Dropping tables!")
+    #     self.dropTables()
+
     def testSingleAttribute(self):
         """Check that the DBMS supports tables with a single attribute with and without a pkey"""
         
