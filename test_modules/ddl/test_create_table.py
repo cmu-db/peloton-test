@@ -17,33 +17,41 @@ class TestCreateTable(common.BaseTest):
     def __init__(self, testName):
         common.BaseTest.__init__(self, testName, configPath, self.__class__.__name__)
 
-    # def setUp(self):
-    #     LOG.info("Dropping tables!")
-    #     self.dropTables()
-
     def testSingleAttribute(self):
         """Check that the DBMS supports tables with a single attribute with and without a pkey"""
-        
         for primaryKey in [True, False]:
             for attrType in common.ALL_TYPES:
                 tableName = self.nextTableName()
-                LOG.info("%s -> %s // primaryKey=%s" % (tableName, attrType, primaryKey))
-                
-                t = common.Table(tableName, self.getOracleConn())
-                t.addAttribute(attrType, primaryKey=primaryKey)
-                t.create()
-                
+                LOG.debug("%s -> %s // primaryKey=%s" % (tableName, attrType, primaryKey))
+
+                for conn in self.getConnections():
+                    t = common.Table(tableName, conn)
+                    t.addAttribute(attrType, primaryKey=primaryKey)
+                    t.create()
+
                 # Check to make sure that the table was created
                 self.assertIn(tableName, self.getTestTables(common.DB_ORACLE))
-                LOG.info("%s -> CREATED!" % tableName)
-            ## FOR
-        ## FOR
+                self.assertIn(tableName, self.getTestTables(common.DB_TARGET))
+                LOG.debug("%s -> CREATED!" % tableName)
     ## DEF
         
         
     
     def testNotNulls(self):
         """Check that the DBMS supports all of the different types as not null"""
-        pass
+        for attrType in common.ALL_TYPES:
+            tableName = self.nextTableName()
+            LOG.info("%s -> %s // NULL" % (tableName, attrType))
+
+            for conn in self.getConnections():
+                t = common.Table(tableName, conn)
+                t.addAttribute("INT", primaryKey=True)
+                t.addAttribute(attrType, primaryKey=False, attrNull=True)
+                t.create()
+
+            # Check to make sure that the table was created
+            self.assertIn(tableName, self.getTestTables(common.DB_ORACLE))
+            self.assertIn(tableName, self.getTestTables(common.DB_TARGET))
+            LOG.info("%s -> CREATED!" % tableName)
     ## DEF
 ## CLASS

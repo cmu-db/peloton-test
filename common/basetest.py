@@ -71,6 +71,9 @@ class BaseTest(unittest.TestCase):
         ## FOR
     ## DEF
 
+    def getConnections(self):
+        return (self.__dict__[DB_ORACLE], self.__dict__[DB_TARGET])
+
     def getTargetConn(self):
         return self.__dict__[DB_TARGET]
 
@@ -91,12 +94,12 @@ class BaseTest(unittest.TestCase):
     def dropTables(self):
         for db in [DB_ORACLE, DB_TARGET]:
             with self.__dict__[db].cursor() as cursor:
-                LOG.info("Dropping %s.%s tables" % (db, self.baseName))
+                LOG.debug("Dropping %s.%s tables" % (db, self.baseName))
                 for tableName in self.getTestTables(db):
                     sql = "DROP TABLE IF EXISTS %s" % tableName
                     LOG.debug("EXEC[%s]: %s" % (db, sql))
                     cursor.execute(sql)
-                LOG.info("Flushing drop tables for %s" % db)
+                LOG.debug("Flushing drop tables for %s" % db)
             ## WITH
     ## DEF
 
