@@ -33,23 +33,57 @@ class TestCreateTable(common.BaseTest):
                     # Check to make sure that the table was created
                     self.assertIn(tableName, self.getTestTables(conn))
     ## DEF
-        
-        
-    
+
     def testNotNulls(self):
         """Check that the DBMS supports all of the different types as not null"""
         for attrType in common.ALL_TYPES:
             tableName = self.nextTableName()
-            LOG.info("%s -> %s // NULL" % (tableName, attrType))
+            LOG.debug("%s -> %s // NULL" % (tableName, attrType))
 
             for conn in self.getConnections():
                 t = common.Table(tableName, conn)
                 t.addAttribute("INT", primaryKey=True)
                 t.addAttribute(attrType, primaryKey=False, attrNull=True)
                 t.create()
-                LOG.info("%s -> CREATED!" % tableName)
+                LOG.debug("%s -> CREATED!" % tableName)
 
                 # Check to make sure that the table was created
                 self.assertIn(tableName, self.getTestTables(conn))
     ## DEF
+
+    def testUnique(self):
+        """Check that the DBMS supports all of the different types as unique"""
+        for attrType in common.ALL_TYPES:
+            tableName = self.nextTableName()
+            LOG.debug("%s -> %s // NULL" % (tableName, attrType))
+
+            for conn in self.getConnections():
+                t = common.Table(tableName, conn)
+                t.addAttribute("INT", primaryKey=True)
+                t.addAttribute(attrType, primaryKey=False, attrNull=False, attrUnique=True)
+                t.create()
+                LOG.debug("%s -> CREATED!" % tableName)
+
+                # Check to make sure that the table was created
+                self.assertIn(tableName, self.getTestTables(conn))
+    ## DEF
+
+    def testUniqueMulti(self):
+        """Check that the DBMS supports different sets of unique attributes"""
+        for attrType2 in common.ALL_TYPES:
+            for attrType3 in common.ALL_TYPES:
+                tableName = self.nextTableName()
+                for conn in self.getConnections():
+                    t = common.Table(tableName, conn)
+                    attrName1 = t.addAttribute("INT", primaryKey=True)
+                    attrName2 = t.addAttribute(attrType2, primaryKey=False)
+                    attrName3 = t.addAttribute(attrType3, primaryKey=False)
+                    t.addUniqueConstraint(attrName1, attrName2, attrName3)
+                    t.create()
+                    LOG.debug("%s -> CREATED!" % tableName)
+
+                    # Check to make sure that the table was created
+                    self.assertIn(tableName, self.getTestTables(conn))
+    ## DEF
+
 ## CLASS

@@ -94,13 +94,16 @@ class BaseTest(unittest.TestCase):
     def dropTables(self):
         for db in [DB_ORACLE, DB_TARGET]:
             conn = self.__dict__[db]
-            with conn.cursor() as cursor:
-                LOG.debug("Dropping %s.%s tables" % (db, self.baseName))
-                for tableName in self.getTestTables(conn):
+            LOG.debug("Dropping %s.%s tables" % (db, self.baseName))
+            for tableName in self.getTestTables(conn):
+                # Use a separate cursor per table in case one of tests creates a lot of tables
+                # Otherwise we may run out of locks in the DBMS
+                with conn.cursor() as cursor:
                     sql = "DROP TABLE IF EXISTS %s" % tableName
                     LOG.debug("EXEC[%s]: %s" % (db, sql))
                     cursor.execute(sql)
                 LOG.debug("Flushing drop tables for %s" % db)
+                conn.commit()
             ## WITH
     ## DEF
 

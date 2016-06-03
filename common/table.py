@@ -63,20 +63,24 @@ class Table():
         self.tableName = tableName
         self.table = sqlalchemy.Table(self.tableName, self.metadata)
         self.attributeCtr = 0
+        self.constraintCtr = 0
     ## DEF
     
-    def __nextName(self):
+    def __nextAttrName(self):
         self.attributeCtr += 1
         return "attr_%02d" % self.attributeCtr
-    ## DEF
-    
+
+    def __nextConstraintName(self):
+        self.constraintCtr += 1
+        return "const_%s_%02d" % (self.tableName, self.constraintCtr)
+
     def addAttribute(self, attrType, primaryKey=False, attrLength=None, attrNull=True, attrUnique=False):
         if not attrType in ALL_TYPES:
             raise Exception("Unknown type '%s'" % attrType)
         if ALL_TYPES_MAPPINGS[attrType] is None:
             raise Exception("Unsupported type '%s'" % attrType)
         
-        attrName = self.__nextName()
+        attrName = self.__nextAttrName()
         targetAttrType = "sqlalchemy.sql.sqltypes.%s" % ALL_TYPES_MAPPINGS[attrType].__name__
         targetAttrType += "()" if attrLength is None else "(%d)" % attrLength
         attrType = eval(targetAttrType)
@@ -87,8 +91,17 @@ class Table():
                                  unique=attrUnique)
         self.table.append_column(attr)
         LOG.debug("Added attribute %s" % (attr))
+        return attrName
     ## DEF
-        
+
+    def addUniqueConstraint(self, *attrNames):
+        constraintName = self.__nextConstraintName()
+        LOG.debug("Added unique constraint %s %s" % (constraintName, str(attrNames)))
+        const = sqlalchemy.UniqueConstraint(*attrNames, name=constraintName)
+        self.table.append_constraint(const)
+        return constraintName
+    ## DEF
+
     def create(self):
         assert not self.table is None
         LOG.debug("Creating table '%s'" % self.tableName)
