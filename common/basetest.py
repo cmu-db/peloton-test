@@ -80,8 +80,8 @@ class BaseTest(unittest.TestCase):
     def getOracleConn(self):
         return self.__dict__[DB_ORACLE]
     
-    def getTestTables(self, db):
-        with self.__dict__[db].cursor() as cursor:
+    def getTestTables(self, conn):
+        with conn.cursor() as cursor:
             cursor.execute("""
                 SELECT table_name FROM information_schema.tables
                  WHERE table_name LIKE %s
@@ -93,9 +93,10 @@ class BaseTest(unittest.TestCase):
     
     def dropTables(self):
         for db in [DB_ORACLE, DB_TARGET]:
-            with self.__dict__[db].cursor() as cursor:
+            conn = self.__dict__[db]
+            with conn.cursor() as cursor:
                 LOG.debug("Dropping %s.%s tables" % (db, self.baseName))
-                for tableName in self.getTestTables(db):
+                for tableName in self.getTestTables(conn):
                     sql = "DROP TABLE IF EXISTS %s" % tableName
                     LOG.debug("EXEC[%s]: %s" % (db, sql))
                     cursor.execute(sql)

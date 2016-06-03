@@ -28,11 +28,10 @@ class TestCreateTable(common.BaseTest):
                     t = common.Table(tableName, conn)
                     t.addAttribute(attrType, primaryKey=primaryKey)
                     t.create()
+                    LOG.debug("%s -> CREATED!" % tableName)
 
-                # Check to make sure that the table was created
-                self.assertIn(tableName, self.getTestTables(common.DB_ORACLE))
-                self.assertIn(tableName, self.getTestTables(common.DB_TARGET))
-                LOG.debug("%s -> CREATED!" % tableName)
+                    # Check to make sure that the table was created
+                    self.assertIn(tableName, self.getTestTables(conn))
     ## DEF
         
         
@@ -48,10 +47,9 @@ class TestCreateTable(common.BaseTest):
                 t.addAttribute("INT", primaryKey=True)
                 t.addAttribute(attrType, primaryKey=False, attrNull=True)
                 t.create()
+                LOG.info("%s -> CREATED!" % tableName)
 
-            # Check to make sure that the table was created
-            self.assertIn(tableName, self.getTestTables(common.DB_ORACLE))
-            self.assertIn(tableName, self.getTestTables(common.DB_TARGET))
-            LOG.info("%s -> CREATED!" % tableName)
+                # Check to make sure that the table was created
+                self.assertIn(tableName, self.getTestTables(conn))
     ## DEF
 ## CLASS
