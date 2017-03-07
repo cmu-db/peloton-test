@@ -1,2 +1,4 @@
 # peloton-test
-SQL Regresssion Testing Framework for the Peloton DBMS
+Testing Framework for the Peloton DBMS
+
+You can find more information about the project in the documentation folder.
