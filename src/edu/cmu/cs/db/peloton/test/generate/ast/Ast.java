@@ -5,22 +5,42 @@ import edu.cmu.cs.db.peloton.test.generate.Context;
 import java.util.*;
 
 /**
- * Created by Tianyu on 3/13/17.
+ * Static Utility class that groups together various definitions in the
+ * sql syntax tree implementation
  */
 public final class Ast {
+    /**
+     * An Ast Clause consists of a sql string and the context this clause is in
+     */
     public final static class Clause {
         private final String clause;
         private final Context context;
 
+        /**
+         * Instantiates a new Clause.
+         *
+         * @param clause  the clause string
+         * @param context the context
+         */
         public Clause(String clause, Context context) {
             this.clause = clause;
             this.context = context;
         }
 
+        /**
+         * Gets clause.
+         *
+         * @return the clause
+         */
         public String getClause() {
             return clause;
         }
 
+        /**
+         * Gets context.
+         *
+         * @return the context
+         */
         public Context getContext() {
             return context;
         }
@@ -43,7 +63,16 @@ public final class Ast {
         }
     }
 
+    /**
+     * The interface that represents an element of the syntax tree.
+     */
     public interface Elem {
+        /**
+         * Iterates through all values of this element given a context
+         *
+         * @param context the context
+         * @return the iterator of all possible values of this type given the context
+         */
         Iterator<Clause> allClauses(Context context);
     }
 

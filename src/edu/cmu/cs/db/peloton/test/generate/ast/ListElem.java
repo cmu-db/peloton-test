@@ -10,9 +10,30 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Created by Tianyu on 3/13/17.
+ * Takes an Ast element and produces a list of that ast element type.
+ * (e.g. column names can be formed into a list of column lists)
+ * The ListElem class can generate all combinations of values of that type.
  */
 public class ListElem implements Ast.Elem {
+    private final Ast.Elem elemType;
+
+    /**
+     * Instantiates a new List elem.
+     *
+     * @param elemType the elem type
+     */
+    public ListElem(Ast.Elem elemType) {
+        this.elemType = elemType;
+    }
+
+    @Override
+    public Iterator<Ast.Clause> allClauses(Context context) {
+        return Util.map(
+                new Combinations<>(elemType.allClauses(context)),
+                Util::fromList
+        );
+    }
+
     private static class Combinations<E> implements Iterator<List<E>>{
         private final long elements;
         private long curr = 0;
@@ -20,9 +41,9 @@ public class ListElem implements Ast.Elem {
         private final List<E> result;
 
         Combinations(Iterator<E> target) {
-            this.target = Stream.generate(target::next).collect(Collectors.toList());
+            this.target = Util.toList(target);
             elements = ~(-1L << this.target.size());
-            result = new ArrayList<>();
+            result = new ArrayList<>(this.target);
         }
 
         @Override
@@ -46,19 +67,6 @@ public class ListElem implements Ast.Elem {
         private boolean inCombination(int index) {
             return ((curr >> index) & 1L) == 1L;
         }
-    }
-
-    private final Ast.Elem elemType;
-
-    public ListElem(Ast.Elem elemType) {
-        this.elemType = elemType;
-    }
-
-    public Iterator<Ast.Clause> allClauses(Context context) {
-        return Util.map(
-                new Combinations<>(elemType.allClauses(context)),
-                Util::fromList
-        );
     }
 }
 
