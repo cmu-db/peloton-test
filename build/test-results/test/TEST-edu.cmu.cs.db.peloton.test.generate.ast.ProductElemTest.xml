@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="edu.cmu.cs.db.peloton.test.generate.ast.ProductElemTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-03-20T15:49:28" hostname="GS13087.sp.cs.cmu.edu" time="0.047">
+  <properties/>
+  <testcase name="allClauses" classname="edu.cmu.cs.db.peloton.test.generate.ast.ProductElemTest" time="0.047"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

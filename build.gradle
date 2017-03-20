@@ -1,6 +1,19 @@
+
+
 apply plugin: 'java'
+apply plugin: 'eclipse'
 apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
 apply plugin: 'findbugs'
+
+test.testLogging { exceptionFormat "full"; events "failed", "passed", "skipped" }
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.ow2.asm:asm:5.0.3'
+        forcedModules = [ 'org.ow2.asm:asm:5.0.3' ]
+    }
+}
 
 repositories {
     mavenCentral()
@@ -8,11 +21,13 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    runtime fileTree(dir: 'lib', include: '*.jar')
 }
 
 dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
 }
+
 
 checkstyle {
     ignoreFailures = true
@@ -28,5 +43,20 @@ tasks.withType(FindBugs) {
     reports {
         xml.enabled false
         html.enabled true
+    }
+}
+
+buildscript{
+    repositories {
+        mavenCentral()
+    }
+
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination "${buildDir}/reports/coverage"
     }
 }
