@@ -3,6 +3,7 @@ package edu.cmu.cs.db.peloton.test.generate;
 import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -11,9 +12,9 @@ import java.util.function.Function;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * Static utility class for various convenient methods
+ * Static utility class for various convenient methods on iterators
  */
-public final class Util {
+public final class Iterators {
     /**
      * Concatenates two iterators together to form a new iterator
      *
@@ -110,7 +111,18 @@ public final class Util {
         return new Ast.Clause(builder.toString(), context);
     }
 
-    private Util() {
+    /**
+     * Convenient method for constructing an iterator.
+     *
+     * @param elems the elements in the iterator, in order
+     * @param <E> the type if elements in the iterator
+     * @return an iterator that returns the elements given in that order
+     */
+    public static <E> Iterator<E> of(E... elems) {
+        return Arrays.asList(elems).iterator();
+    }
+
+    private Iterators() {
         // should not instantiate
     }
 }

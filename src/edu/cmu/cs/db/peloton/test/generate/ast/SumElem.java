@@ -2,7 +2,7 @@ package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import com.google.common.collect.ImmutableList;
 import edu.cmu.cs.db.peloton.test.generate.Context;
-import edu.cmu.cs.db.peloton.test.generate.Util;
+import edu.cmu.cs.db.peloton.test.generate.Iterators;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -18,15 +18,15 @@ import java.util.Iterator;
 public abstract class SumElem implements Ast.Elem {
 
     /**
-     * the arguments to this ast element
+     * the arguments to this ast element, the result list must not be empty.
      *
      * @return a list of elements that make up this element
      */
     protected abstract ImmutableList<Ast.Elem> args();
 
     @Override
-    public Iterator<Ast.Clause> allClauses(Context context) {
-        return args().stream().map(e -> e.allClauses(context))
-                .reduce(Collections.emptyIterator(), Util::chain);
+    public Iterator<Ast.Clause> allClauses(Context context, int depth) {
+        return args().stream().map(e -> e.allClauses(context, depth))
+                .reduce(Collections.emptyIterator(), Iterators::chain);
     }
 }

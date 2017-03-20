@@ -68,12 +68,15 @@ public final class Ast {
      */
     public interface Elem {
         /**
-         * Iterates through all values of this element given a context
+         * Iterates through all values of this element given a context and depth. The depth
+         * limits the depth of generated ast to guard against infinite trees. The depth will
+         * only be applied to infinite types.
          *
          * @param context the context
+         * @param depth the limit to the depth of the ast we are generating for infinite types
          * @return the iterator of all possible values of this type given the context
          */
-        Iterator<Clause> allClauses(Context context);
+        Iterator<Clause> allClauses(Context context, int depth);
     }
 
     private Ast() {

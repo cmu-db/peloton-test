@@ -2,16 +2,19 @@ package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import com.google.common.collect.ImmutableList;
 import edu.cmu.cs.db.peloton.test.generate.Context;
-import edu.cmu.cs.db.peloton.test.generate.Util;
+import edu.cmu.cs.db.peloton.test.generate.Iterators;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-// TODO currently immutable, potentially change to a more efficient solution if
-// performance becomes a problem
+// TODO benchmark and potentially optimize for efficiency
+// Currently this implementation uses the most straightforward
+// recursive solution and immutable data structures to ensure
+// functional correctness. If this proves too slow, we can
+// write more efficient solutions. However, it is possible that
+// for the shallow sql queries we target, this cost will be
+// negligible to the database operation itself
 
 /**
  * Combines Ast elements into an Ast element in an "and" relationship.
@@ -23,7 +26,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public abstract class ProductElem implements Ast.Elem {
     /**
-     * the arguments to this ast element
+     * the arguments to this ast element, the list must not be empty.
      *
      * @return a list of elements that make up this element
      */
@@ -39,11 +42,13 @@ public abstract class ProductElem implements Ast.Elem {
     protected abstract String format(List<String> args);
 
     @Override
-    public Iterator<Ast.Clause> allClauses(Context context) {
-        return Util.map(allClausesHelper(context, args(), 0),
+    public Iterator<Ast.Clause> allClauses(Context context, int depth) {
+        return Iterators.map(allClausesHelper(context, depth, args(), 0),
                 a -> new Ast.Clause(format(a.clauses), a.context));
     }
 
+    // Since Strings are immutable, this class provides a mutable version of clause
+    // that helps make the recursive calls
     private static final class AlmostClause {
         private final List<String> clauses;
         private final Context context;
@@ -60,27 +65,31 @@ public abstract class ProductElem implements Ast.Elem {
     }
 
     private static Iterator<AlmostClause> allClausesHelper(
-            Context context, List<Ast.Elem> toIterate, int currentIndex) {
-
-        checkArgument(!toIterate.isEmpty());
-        checkArgument(currentIndex >= 0 && currentIndex < toIterate.size());
-
+            Context context, int depth, List<Ast.Elem> toIterate, int currentIndex) {
         Ast.Elem curr = toIterate.get(currentIndex);
         if (currentIndex == toIterate.size() - 1) {
-            return Util.map(curr.allClauses(context), a -> new AlmostClause(a.getClause(), a.getContext()));
+            return Iterators.map(curr.allClauses(context, depth), a -> new AlmostClause(a.getClause(), a.getContext()));
         }
 
-        Iterator<Iterator<AlmostClause>>  recursive =
-                Util.map(curr.allClauses(context),
-                         a -> Util.map(
-                                allClausesHelper(a.getContext(), toIterate, currentIndex + 1),
-                                b -> merge(b, a)
-                         )
-                );
+        Iterator<Iterator<AlmostClause>> recursive = Iterators.map(
+                curr.allClauses(context, depth),
+                a -> recurse(a, depth, toIterate, currentIndex)
+        );
 
-        return Util.foldLeft(recursive, Collections.emptyIterator(), Util::chain);
+        return Iterators.foldLeft(recursive, Collections.emptyIterator(), Iterators::chain);
     }
 
+    // Recursively gets all product values for a smaller list given a value for the head of
+    // the current list
+    private static Iterator<AlmostClause> recurse(Ast.Clause one, int depth, List<Ast.Elem> toIterate, int currentIndex) {
+        return Iterators.map(
+                allClausesHelper(one.getContext(), depth, toIterate, currentIndex + 1),
+                a -> merge(a, one)
+        );
+    }
+
+    // Merges a clause with an almost clause by taking the union of the two contexts and
+    // adding the string value of other to the list of values in one
     private static AlmostClause merge(AlmostClause one, Ast.Clause other) {
         return new AlmostClause(
                 ImmutableList.<String>builder()

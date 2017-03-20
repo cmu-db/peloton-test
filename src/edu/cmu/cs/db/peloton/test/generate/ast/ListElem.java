@@ -1,13 +1,14 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import edu.cmu.cs.db.peloton.test.generate.Context;
-import edu.cmu.cs.db.peloton.test.generate.Util;
+import edu.cmu.cs.db.peloton.test.generate.Iterators;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Takes an Ast element and produces a list of that ast element type.
@@ -20,17 +21,19 @@ public class ListElem implements Ast.Elem {
     /**
      * Instantiates a new List elem.
      *
-     * @param elemType the elem type
+     * @param elemType the elem type, cannot be null
      */
     public ListElem(Ast.Elem elemType) {
+        checkNotNull(elemType);
         this.elemType = elemType;
     }
 
     @Override
-    public Iterator<Ast.Clause> allClauses(Context context) {
-        return Util.map(
-                new Combinations<>(elemType.allClauses(context)),
-                Util::fromList
+    public Iterator<Ast.Clause> allClauses(Context context, int depth) {
+        checkNotNull(context);
+        return Iterators.map(
+                new Combinations<>(elemType.allClauses(context, depth)),
+                Iterators::fromList
         );
     }
 
@@ -41,7 +44,12 @@ public class ListElem implements Ast.Elem {
         private final List<E> result;
 
         Combinations(Iterator<E> target) {
-            this.target = Util.toList(target);
+            this.target = Iterators.toList(target);
+
+            // Only supports combinations up to 64 elements. This is not a problem because
+            // if we ever need to do anything above 64 it will take way too long anyway.
+            checkArgument(this.target.size() <= 64);
+
             elements = ~(-1L << this.target.size());
             result = new ArrayList<>(this.target);
         }

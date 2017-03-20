@@ -1,7 +1,7 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import edu.cmu.cs.db.peloton.test.generate.Context;
-import edu.cmu.cs.db.peloton.test.generate.Util;
+import edu.cmu.cs.db.peloton.test.generate.Iterators;
 import org.junit.Test;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public class TestListElem {
     @Test
     public void testListElem() {
         Ast.Elem test = new StubElem("foo", "bar", "42");
-        List<Ast.Clause> result = Util.toList(new ListElem(test).allClauses(Context.empty()));
+        List<Ast.Clause> result = Iterators.toList(new ListElem(test).allClauses(Context.empty()));
         assertTrue(result.contains(clauseOf("foo")));
         assertTrue(result.contains(clauseOf("bar")));
         assertTrue(result.contains(clauseOf("42")));

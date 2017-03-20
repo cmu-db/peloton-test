@@ -2,7 +2,7 @@ package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import com.google.common.collect.ImmutableList;
 import edu.cmu.cs.db.peloton.test.generate.Context;
-import edu.cmu.cs.db.peloton.test.generate.Util;
+import edu.cmu.cs.db.peloton.test.generate.Iterators;
 import org.junit.Test;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class ProductElemTest {
             }
         };
 
-        List<Ast.Clause> values = Util.toList(tested.allClauses(Context.empty()));
+        List<Ast.Clause> values = Iterators.toList(tested.allClauses(Context.empty()));
         assertTrue(values.contains(clauseOf("foo op 1")));
         assertTrue(values.contains(clauseOf("foo op 2")));
         assertTrue(values.contains(clauseOf("bar op 1")));
