@@ -26,6 +26,7 @@ dependencies {
 
 dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
+    compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
 }
 
 
