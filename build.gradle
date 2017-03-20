@@ -1,10 +1,9 @@
-
-
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
 apply plugin: 'findbugs'
+apply plugin: 'application'
 
 test.testLogging { exceptionFormat "full"; events "failed", "passed", "skipped" }
 
@@ -12,6 +11,14 @@ configurations.all {
     resolutionStrategy {
         force 'org.ow2.asm:asm:5.0.3'
         forcedModules = [ 'org.ow2.asm:asm:5.0.3' ]
+    }
+}
+
+mainClassName = "edu.cmu.cs.db.peloton.test.common.Main"
+
+run {
+    if (project.hasProperty("appArgs")) {
+        args Eval.me(appArgs)
     }
 }
 
