@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="6.7">
+<file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/common/DatabaseWrapper.java">
+</file>
+<file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/common/Main.java">
+</file>
+<file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/common/PostgresDatabaseWrapper.java">
+</file>
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/Context.java">
 </file>
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/Iterators.java">
@@ -11,5 +17,17 @@
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/ast/ProductElem.java">
 </file>
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/ast/SumElem.java">
+</file>
+<file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/defn/ClassAliasStar.java">
+</file>
+<file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/defn/FromClass.java">
+</file>
+<file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/defn/PropertySpec.java">
+</file>
+<file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/defn/SelectProp.java">
+</file>
+<file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/defn/SimpleSelect.java">
+</file>
+<file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/defn/Star.java">
 </file>
 </checkstyle>

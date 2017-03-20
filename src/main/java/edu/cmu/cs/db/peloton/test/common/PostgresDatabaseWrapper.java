@@ -10,10 +10,9 @@ import java.sql.*;
 public class PostgresDatabaseWrapper implements DatabaseWrapper{
     @Override
     public Context getContext(String hostname, int port, String dbName) {
-        try {
-            Connection conn;
             Context.Builder result = new Context.Builder();
-            conn = DriverManager.getConnection(String.format("jdbc:postgresql://%s:%d/%s", hostname, port, dbName));
+        try (Connection conn = DriverManager.getConnection(
+                 String.format("jdbc:postgresql://%s:%d/%s", hostname, port, dbName))) {
             DatabaseMetaData metaData = conn.getMetaData();
             String[] types = {"TABLE"};
             ResultSet tables = metaData.getTables(null, null, "%", types);

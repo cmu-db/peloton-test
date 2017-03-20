@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * Context for SQL clauses
  */
-public class Context {
+public final class Context {
     // TODO find a better representation for types
     // tables name -> (column name -> type name)
     private final Map<String, Map<String, String>> tables;
@@ -106,10 +106,6 @@ public class Context {
      * @return the context
      */
     public Context union(Context other) {
-        Map<String, Map<String, String>> newTables = new HashMap<>();
-        newTables.putAll(tables);
-        newTables.putAll(other.tables);
-
         return new Context(
                 mergeImmutable(tables, other.tables),
                 mergeImmutable(variables, other.variables),
