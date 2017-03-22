@@ -16,7 +16,13 @@ public class Main {
      * @throws SQLException the sql exception
      */
     public static void main(String[] args) throws SQLException {
-        Context context = new PostgresDatabaseWrapper().getContext(args[0], Integer.parseInt(args[1]), args[2]);
+        Context context = new DatabaseWrapper(){
+            @Override
+            public Connection getConnection(String hostname, int port, String dbName) throws SQLException {
+                return DriverManager.getConnection(
+                        String.format("jdbc:postgresql://%s:%d/%s", hostname, port, dbName));
+            }
+        }.getContext(args[0], Integer.parseInt(args[1]), args[2]);
         new SimpleSelect().allClauses(context, 0).forEachRemaining(a -> System.out.println(a.getClause()));
     }
 }
