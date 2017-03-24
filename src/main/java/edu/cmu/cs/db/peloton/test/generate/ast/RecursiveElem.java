@@ -13,22 +13,13 @@ import java.util.stream.IntStream;
 /**
  * Created by tianyuli on 3/22/17.
  */
-public abstract class RecursiveElem extends ProductElem {
+public abstract class RecursiveElem implements Ast.Elem {
     protected abstract int numChildren();
 
     protected abstract Iterator<Ast.Clause> baseCase(Context context);
 
     protected abstract Iterator<Ast.Clause> recursiveCase(List<Supplier<Iterator<Ast.Clause>>> recursiveCases);
 
-    @Override
-    protected ImmutableList<Ast.Elem> args() {
-        return null;
-    }
-
-    @Override
-    protected String format(List<String> args) {
-        return null;
-    }
 
     @Override
     public Iterator<Ast.Clause> allClauses(Context context, int depth) {
