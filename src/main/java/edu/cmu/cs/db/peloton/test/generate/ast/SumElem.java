@@ -1,6 +1,7 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import com.google.common.collect.ImmutableList;
+import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
 import edu.cmu.cs.db.peloton.test.generate.Context;
 import edu.cmu.cs.db.peloton.test.generate.Iterators;
 
@@ -25,8 +26,8 @@ public abstract class SumElem implements Ast.Elem {
     protected abstract ImmutableList<Ast.Elem> args();
 
     @Override
-    public Iterator<Ast.Clause> allClauses(Context context, int depth) {
-        return args().stream().map(e -> e.allClauses(context, depth))
+    public Iterator<Ast.Clause> allClauses(DatabaseDefinition db, Context context, int depth) {
+        return args().stream().map(e -> e.allClauses(db, context, depth))
                 .reduce(Collections.emptyIterator(), Iterators::chain);
     }
 }

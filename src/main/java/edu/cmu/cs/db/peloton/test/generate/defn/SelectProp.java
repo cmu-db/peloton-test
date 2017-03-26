@@ -11,6 +11,10 @@ import edu.cmu.cs.db.peloton.test.generate.ast.SumElem;
 public class SelectProp extends SumElem {
     @Override
     protected ImmutableList<Ast.Elem> args() {
-        return ImmutableList.of(new ListElem(new PropertySpec()), new ListElem(new ClassAliasStar()), new Star());
+        return ImmutableList.of(
+                new ListElem(new PropertySpec()),
+                new ListElem(new ClassAliasStar()),
+                new Star()
+        );
     }
 }

@@ -1,5 +1,6 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
+import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
 import edu.cmu.cs.db.peloton.test.generate.Context;
 
 import java.util.Arrays;
@@ -17,7 +18,7 @@ public class StubElem implements Ast.Elem {
     }
 
     @Override
-    public Iterator<Ast.Clause> allClauses(Context context, int depth) {
+    public Iterator<Ast.Clause> allClauses(DatabaseDefinition db, Context context, int depth) {
         return values.stream().map(s -> new Ast.Clause(s, context)).iterator();
     }
 }

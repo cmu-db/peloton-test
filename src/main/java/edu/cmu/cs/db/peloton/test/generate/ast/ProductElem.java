@@ -1,6 +1,7 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import com.google.common.collect.ImmutableList;
+import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
 import edu.cmu.cs.db.peloton.test.generate.Context;
 import edu.cmu.cs.db.peloton.test.generate.Iterators;
 
@@ -42,8 +43,8 @@ public abstract class ProductElem implements Ast.Elem {
     protected abstract String format(List<String> args);
 
     @Override
-    public Iterator<Ast.Clause> allClauses(Context context, int depth) {
-        return Iterators.map(allClausesHelper(context, depth, args(), 0),
+    public Iterator<Ast.Clause> allClauses(DatabaseDefinition db, Context context, int depth) {
+        return Iterators.map(allClausesHelper(db, context, depth, args(), 0),
                 a -> new Ast.Clause(format(a.clauses), a.context));
     }
 
@@ -67,15 +68,16 @@ public abstract class ProductElem implements Ast.Elem {
     }
 
     private static Iterator<AlmostClause> allClausesHelper(
-            Context context, int depth, List<Ast.Elem> toIterate, int currentIndex) {
+            DatabaseDefinition db, Context context, int depth, List<Ast.Elem> toIterate, int currentIndex) {
         Ast.Elem curr = toIterate.get(currentIndex);
         if (currentIndex == toIterate.size() - 1) {
-            return Iterators.map(curr.allClauses(context, depth), a -> new AlmostClause(a.getClause(), a.getContext()));
+            return Iterators.map(curr.allClauses(db, context, depth),
+                    a -> new AlmostClause(a.getClause(), a.getContext()));
         }
 
         Iterator<Iterator<AlmostClause>> recursive = Iterators.map(
-                curr.allClauses(context, depth),
-                a -> recurse(a, depth, toIterate, currentIndex)
+                curr.allClauses(db, context, depth),
+                a -> recurse(db, a, depth, toIterate, currentIndex)
         );
 
         return Iterators.foldLeft(recursive, Collections.emptyIterator(), Iterators::chain);
@@ -83,9 +85,10 @@ public abstract class ProductElem implements Ast.Elem {
 
     // Recursively gets all product values for a smaller list given a value for the head of
     // the current list
-    private static Iterator<AlmostClause> recurse(Ast.Clause one, int depth, List<Ast.Elem> toIterate, int currentIndex) {
+    private static Iterator<AlmostClause> recurse(DatabaseDefinition db, Ast.Clause one, int depth,
+                                                  List<Ast.Elem> toIterate, int currentIndex) {
         return Iterators.map(
-                allClausesHelper(one.getContext(), depth, toIterate, currentIndex + 1),
+                allClausesHelper(db, one.getContext(), depth, toIterate, currentIndex + 1),
                 a -> merge(a, one)
         );
     }

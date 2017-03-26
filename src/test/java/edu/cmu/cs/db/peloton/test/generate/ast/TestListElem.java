@@ -13,7 +13,7 @@ public class TestListElem {
     @Test
     public void testListElem() {
         Ast.Elem test = new StubElem("foo", "bar", "42");
-        List<Ast.Clause> result = Iterators.toList(new ListElem(test).allClauses(Context.empty(), 0));
+        List<Ast.Clause> result = Iterators.toList(new ListElem(test).allClauses(null, Context.EMPTY, 0));
         assertTrue(result.contains(clauseOf("foo")));
         assertTrue(result.contains(clauseOf("bar")));
         assertTrue(result.contains(clauseOf("42")));

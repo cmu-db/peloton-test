@@ -27,7 +27,7 @@ public class ProductElemTest {
             }
         };
 
-        List<Ast.Clause> values = Iterators.toList(tested.allClauses(Context.empty(), 0));
+        List<Ast.Clause> values = Iterators.toList(tested.allClauses(null, Context.EMPTY, 0));
         assertTrue(values.contains(clauseOf("foo op 1")));
         assertTrue(values.contains(clauseOf("foo op 2")));
         assertTrue(values.contains(clauseOf("bar op 1")));

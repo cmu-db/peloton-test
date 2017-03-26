@@ -1,5 +1,6 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
+import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
 import edu.cmu.cs.db.peloton.test.generate.Context;
 import edu.cmu.cs.db.peloton.test.generate.Iterators;
 
@@ -29,10 +30,10 @@ public class ListElem implements Ast.Elem {
     }
 
     @Override
-    public Iterator<Ast.Clause> allClauses(Context context, int depth) {
+    public Iterator<Ast.Clause> allClauses(DatabaseDefinition db, Context context, int depth) {
         checkNotNull(context);
         return Iterators.map(
-                new Combinations<>(elemType.allClauses(context, depth)),
+                new Combinations<>(elemType.allClauses(db, context, depth)),
                 Iterators::fromList
         );
     }

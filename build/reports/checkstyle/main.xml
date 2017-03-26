@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="6.7">
+<file name="/Users/Tianyu/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/common/DatabaseDefinition.java">
+</file>
 <file name="/Users/Tianyu/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/common/DatabaseWrapper.java">
-<error line="11" column="5" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
-<error line="13" column="5" severity="error" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
 </file>
 <file name="/Users/Tianyu/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/common/Main.java">
+</file>
+<file name="/Users/Tianyu/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/common/SqlType.java">
 </file>
 <file name="/Users/Tianyu/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/Context.java">
 </file>
@@ -15,6 +17,8 @@
 <file name="/Users/Tianyu/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/ast/ListElem.java">
 </file>
 <file name="/Users/Tianyu/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/ast/ProductElem.java">
+</file>
+<file name="/Users/Tianyu/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/ast/RecursiveElem.java">
 </file>
 <file name="/Users/Tianyu/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/ast/SumElem.java">
 </file>

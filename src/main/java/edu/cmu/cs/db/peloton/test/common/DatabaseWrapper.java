@@ -5,13 +5,30 @@ import edu.cmu.cs.db.peloton.test.generate.Context;
 import java.sql.*;
 
 /**
- * Created by tianyuli on 3/20/17.
+ * Provide access to a database for the application
  */
 public abstract class DatabaseWrapper {
+    /**
+     * Gets connection.
+     *
+     * @param hostname the hostname
+     * @param port     the port
+     * @param dbName   the db name
+     * @return the connection
+     * @throws SQLException the sql exception
+     */
     public abstract Connection getConnection(String hostname, int port, String dbName) throws SQLException;
 
-    public Context getContext(String hostname, int port, String dbName) {
-            Context.Builder result = new Context.Builder();
+    /**
+     * Gets database definition.
+     *
+     * @param hostname the hostname
+     * @param port     the port
+     * @param dbName   the db name
+     * @return the database definition
+     */
+    public DatabaseDefinition getDatabaseDefinition(String hostname, int port, String dbName) {
+            DatabaseDefinition.Builder result = new DatabaseDefinition.Builder();
         try (Connection conn = getConnection(hostname, port, dbName)) {
             DatabaseMetaData metaData = conn.getMetaData();
             String[] types = {"TABLE"};
@@ -27,12 +44,13 @@ public abstract class DatabaseWrapper {
         }
     }
 
-    private static Context.Builder addTable(DatabaseMetaData metaData, String table, Context.Builder builder) throws SQLException {
+    private static void addTable(DatabaseMetaData metaData,
+                                            String table,
+                                            DatabaseDefinition.Builder builder) throws SQLException {
         ResultSet columns = metaData.getColumns(null, null, table, null);
         while (columns.next()) {
             builder.column(columns.getString("COLUMN_NAME"),
                     columns.getString("TYPE_NAME"));
         }
-        return builder;
     }
 }

@@ -1,6 +1,7 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import com.google.common.collect.ImmutableList;
+import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
 import edu.cmu.cs.db.peloton.test.generate.Context;
 
 import java.util.Iterator;
@@ -22,12 +23,12 @@ public abstract class RecursiveElem implements Ast.Elem {
 
 
     @Override
-    public Iterator<Ast.Clause> allClauses(Context context, int depth) {
+    public Iterator<Ast.Clause> allClauses(DatabaseDefinition db, Context context, int depth) {
         if (depth == 0) {
             return baseCase(context);
         }
 
-        IntFunction<Supplier<Iterator<Ast.Clause>>> mapper = x -> (() -> allClauses(context, depth - 1));
+        IntFunction<Supplier<Iterator<Ast.Clause>>> mapper = x -> (() -> allClauses(db, context, depth - 1));
 
         List<Supplier<Iterator<Ast.Clause>>> children = IntStream.range(0, numChildren())
                 .mapToObj(mapper)

@@ -1,5 +1,6 @@
 package edu.cmu.cs.db.peloton.test.generate.defn;
 
+import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
 import edu.cmu.cs.db.peloton.test.generate.Context;
 import edu.cmu.cs.db.peloton.test.generate.Iterators;
 import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
@@ -11,7 +12,7 @@ import java.util.Iterator;
  */
 public class Star implements Ast.Elem {
     @Override
-    public Iterator<Ast.Clause> allClauses(Context context, int depth) {
+    public Iterator<Ast.Clause> allClauses(DatabaseDefinition db, Context context, int depth) {
         return Iterators.of(new Ast.Clause("*", context));
     }
 }

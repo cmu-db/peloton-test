@@ -22,7 +22,7 @@ public class SumElemTest {
             }
         };
 
-        List<Ast.Clause> values = Iterators.toList(tested.allClauses(Context.empty(), 0));
+        List<Ast.Clause> values = Iterators.toList(tested.allClauses(null, Context.EMPTY, 0));
         assertTrue(values.contains(clauseOf("foo")));
         assertTrue(values.contains(clauseOf("bar")));
         assertTrue(values.contains(clauseOf("baz")));

@@ -1,5 +1,6 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
+import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
 import edu.cmu.cs.db.peloton.test.generate.Context;
 
 import java.util.*;
@@ -72,11 +73,12 @@ public final class Ast {
          * limits the depth of generated ast to guard against infinite trees. The depth will
          * only be applied to infinite types.
          *
+         * @param db The database that queries will run on
          * @param context the context
          * @param depth the limit to the depth of the ast we are generating for infinite types
          * @return the iterator of all possible values of this type given the context
          */
-        Iterator<Clause> allClauses(Context context, int depth);
+        Iterator<Clause> allClauses(DatabaseDefinition db, Context context, int depth);
     }
 
     private Ast() {

@@ -102,7 +102,7 @@ public final class Iterators {
      */
     public static Ast.Clause fromList(List<Ast.Clause> elems) {
         StringBuilder builder = new StringBuilder();
-        Context context = Context.empty();
+        Context context = Context.EMPTY;
         for (Ast.Clause clause : elems) {
             builder.append(clause.getClause()).append(",");
             context = context.union(clause.getContext());
