@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="6.7">
+<file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/common/AggregateType.java">
+</file>
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/common/DatabaseDefinition.java">
 </file>
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/common/DatabaseWrapper.java">
@@ -9,7 +11,6 @@
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/Iterators.java">
 </file>
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/ast/Ast.java">
-<error line="101" column="18" severity="error" message="&apos;static&apos; modifier out of order with the JLS suggestions." source="com.puppycrawl.tools.checkstyle.checks.modifier.ModifierOrderCheck"/>
 </file>
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/ast/Context.java">
 </file>
@@ -20,6 +21,8 @@
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/ast/RecursiveElem.java">
 </file>
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/ast/SumElem.java">
+</file>
+<file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/defn/AggregateFunc.java">
 </file>
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/defn/ClassAliasStar.java">
 </file>

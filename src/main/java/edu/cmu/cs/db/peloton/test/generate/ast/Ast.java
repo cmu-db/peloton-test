@@ -98,7 +98,7 @@ public final class Ast {
     /**
      * Sql types for variables
      */
-    public final static class VarType implements Type {
+    public static final class VarType implements Type {
         private static final Map<JDBCType, VarType> INSTANCES = new EnumMap<>(JDBCType.class);
 
         static {

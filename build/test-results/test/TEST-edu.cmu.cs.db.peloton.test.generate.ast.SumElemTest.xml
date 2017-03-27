@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="edu.cmu.cs.db.peloton.test.generate.ast.SumElemTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-03-27T17:31:32" hostname="GS13087.sp.cs.cmu.edu" time="0.005">
+<testsuite name="edu.cmu.cs.db.peloton.test.generate.ast.SumElemTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-03-27T17:37:18" hostname="GS13087.sp.cs.cmu.edu" time="0.005">
   <properties/>
   <testcase name="allClauses" classname="edu.cmu.cs.db.peloton.test.generate.ast.SumElemTest" time="0.005"/>
   <system-out><![CDATA[]]></system-out>
