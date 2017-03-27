@@ -1,7 +1,5 @@
 package edu.cmu.cs.db.peloton.test.common;
 
-import edu.cmu.cs.db.peloton.test.generate.Context;
-
 import java.sql.*;
 
 /**

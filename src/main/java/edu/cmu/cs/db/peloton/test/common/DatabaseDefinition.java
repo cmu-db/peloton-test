@@ -52,7 +52,7 @@ public final class DatabaseDefinition {
          * Defines a column for the current table being defined.
          *
          * @param name the name of the column
-         * @param type the type of values stored in the column
+         * @param type the type of valuesOf stored in the column
          * @return self reference for method chaining
          * @throws IllegalStateException if no table is being defined
          */

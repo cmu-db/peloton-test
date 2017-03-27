@@ -1,6 +1,6 @@
 package edu.cmu.cs.db.peloton.test.common;
 
-import edu.cmu.cs.db.peloton.test.generate.Context;
+import edu.cmu.cs.db.peloton.test.generate.ast.Context;
 import edu.cmu.cs.db.peloton.test.generate.defn.SimpleSelect;
 
 import java.sql.*;

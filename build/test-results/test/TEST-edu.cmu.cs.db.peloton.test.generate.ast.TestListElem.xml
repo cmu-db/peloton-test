@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="edu.cmu.cs.db.peloton.test.generate.ast.TestListElem" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-03-27T12:47:05" hostname="GS13087.sp.cs.cmu.edu" time="0.004">
+<testsuite name="edu.cmu.cs.db.peloton.test.generate.ast.TestListElem" tests="1" skipped="0" failures="0" errors="0" timestamp="2017-03-27T17:31:32" hostname="GS13087.sp.cs.cmu.edu" time="0.005">
   <properties/>
-  <testcase name="testListElem" classname="edu.cmu.cs.db.peloton.test.generate.ast.TestListElem" time="0.004"/>
+  <testcase name="testListElem" classname="edu.cmu.cs.db.peloton.test.generate.ast.TestListElem" time="0.005"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

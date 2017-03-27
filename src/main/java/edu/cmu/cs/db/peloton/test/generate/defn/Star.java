@@ -1,7 +1,7 @@
 package edu.cmu.cs.db.peloton.test.generate.defn;
 
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
-import edu.cmu.cs.db.peloton.test.generate.Context;
+import edu.cmu.cs.db.peloton.test.generate.ast.Context;
 import edu.cmu.cs.db.peloton.test.generate.Iterators;
 import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
 

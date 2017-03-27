@@ -1,7 +1,6 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
-import edu.cmu.cs.db.peloton.test.generate.Context;
 import edu.cmu.cs.db.peloton.test.generate.Iterators;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Takes an Ast element and produces a list of that ast element type.
  * (e.g. column names can be formed into a list of column lists)
- * The ListElem class can generate all combinations of values of that type.
+ * The ListElem class can generate all combinations of valuesOf of that type.
  */
 public class ListElem implements Ast.Elem {
     private final Ast.Elem elemType;

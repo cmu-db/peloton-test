@@ -2,7 +2,6 @@ package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import com.google.common.collect.ImmutableList;
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
-import edu.cmu.cs.db.peloton.test.generate.Context;
 import edu.cmu.cs.db.peloton.test.generate.Iterators;
 
 import java.util.Collections;
@@ -13,7 +12,7 @@ import java.util.Iterator;
  * (e.g. SELECT [] takes either * or a valid column name)
  * The SumElem class uses a template method pattern that relies on the
  * user specifying the elements to be combined in the method args, and knows
- * how to generate all values given how to generate values of the argument
+ * how to generate all valuesOf given how to generate valuesOf of the argument
  * ast elements.
  */
 public abstract class SumElem implements Ast.Elem {

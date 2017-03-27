@@ -1,6 +1,5 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
-import edu.cmu.cs.db.peloton.test.generate.Context;
 import edu.cmu.cs.db.peloton.test.generate.Iterators;
 import org.junit.Test;
 

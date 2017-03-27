@@ -6,11 +6,12 @@
 </file>
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/common/Main.java">
 </file>
-<file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/Context.java">
-</file>
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/Iterators.java">
 </file>
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/ast/Ast.java">
+<error line="101" column="18" severity="error" message="&apos;static&apos; modifier out of order with the JLS suggestions." source="com.puppycrawl.tools.checkstyle.checks.modifier.ModifierOrderCheck"/>
+</file>
+<file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/ast/Context.java">
 </file>
 <file name="/Users/tianyuli/Desktop/peloton-test/src/main/java/edu/cmu/cs/db/peloton/test/generate/ast/ListElem.java">
 </file>

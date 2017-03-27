@@ -1,6 +1,7 @@
 package edu.cmu.cs.db.peloton.test.generate;
 
 import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
+import edu.cmu.cs.db.peloton.test.generate.ast.Context;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +62,7 @@ public final class Iterators {
     }
 
     /**
-     * Fold left on the given iterator, combining values using the given function and identity
+     * Fold left on the given iterator, combining valuesOf using the given function and identity
      *
      * @param <T>      the type of elements in the original iterator
      * @param <E>      the resulting type of this operation

@@ -1,7 +1,7 @@
 package edu.cmu.cs.db.peloton.test.generate.defn;
 
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
-import edu.cmu.cs.db.peloton.test.generate.Context;
+import edu.cmu.cs.db.peloton.test.generate.ast.Context;
 import edu.cmu.cs.db.peloton.test.generate.Iterators;
 import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
 
@@ -18,7 +18,7 @@ public class PropertySpec implements Ast.Elem {
     @Override
     public Iterator<Ast.Clause> allClauses(DatabaseDefinition db, Context context, int depth) {
         Iterator<Ast.Clause> result = Collections.emptyIterator();
-        for (String table : context.getTablesInScope()) {
+        for (String table : context.valuesOf(Ast.Sort.TABLE)) {
             result = Iterators.chain(result, forTable(db, context, table));
         }
         return result;

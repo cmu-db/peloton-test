@@ -1,8 +1,6 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
-import com.google.common.collect.ImmutableList;
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
-import edu.cmu.cs.db.peloton.test.generate.Context;
 
 import java.util.Iterator;
 import java.util.List;

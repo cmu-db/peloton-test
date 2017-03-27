@@ -1,7 +1,6 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
-import edu.cmu.cs.db.peloton.test.generate.Context;
 
 import java.util.Arrays;
 import java.util.Iterator;

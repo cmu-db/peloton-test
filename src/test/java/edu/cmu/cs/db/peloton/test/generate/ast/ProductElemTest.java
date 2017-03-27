@@ -1,7 +1,6 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import com.google.common.collect.ImmutableList;
-import edu.cmu.cs.db.peloton.test.generate.Context;
 import edu.cmu.cs.db.peloton.test.generate.Iterators;
 import org.junit.Test;
 

@@ -1,8 +1,8 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
-import edu.cmu.cs.db.peloton.test.generate.Context;
 
+import java.sql.JDBCType;
 import java.util.*;
 
 /**
@@ -69,16 +69,74 @@ public final class Ast {
      */
     public interface Elem {
         /**
-         * Iterates through all values of this element given a context and depth. The depth
+         * Iterates through all valuesOf of this element given a context and depth. The depth
          * limits the depth of generated ast to guard against infinite trees. The depth will
          * only be applied to infinite types.
          *
-         * @param db The database that queries will run on
+         * @param db      The database that queries will run on
          * @param context the context
-         * @param depth the limit to the depth of the ast we are generating for infinite types
-         * @return the iterator of all possible values of this type given the context
+         * @param depth   the limit to the depth of the ast we are generating for infinite types
+         * @return the iterator of all possible valuesOf of this type given the context
          */
         Iterator<Clause> allClauses(DatabaseDefinition db, Context context, int depth);
+    }
+
+    /**
+     * Type of values in the ast
+     */
+    public interface Type {
+        // Marker interface
+    }
+
+    /**
+     * Sql language constructs
+     */
+    public enum Sort implements Type {
+        TABLE, COLUMN
+    }
+
+    /**
+     * Sql types for variables
+     */
+    public final static class VarType implements Type {
+        private static final Map<JDBCType, VarType> INSTANCES = new EnumMap<>(JDBCType.class);
+
+        static {
+            for (JDBCType type : JDBCType.values()) {
+                INSTANCES.put(type, new VarType(type));
+            }
+        }
+
+        private final JDBCType type;
+
+        private VarType(JDBCType type) {
+            this.type = type;
+        }
+
+        /**
+         * returns a instance representing a variable of type.
+         *
+         * @param type the type
+         * @return the var type
+         */
+        public static VarType of(JDBCType type) {
+            return INSTANCES.get(type);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            VarType sqlType = (VarType) o;
+
+            return type == sqlType.type;
+        }
+
+        @Override
+        public int hashCode() {
+            return type.hashCode();
+        }
     }
 
     private Ast() {

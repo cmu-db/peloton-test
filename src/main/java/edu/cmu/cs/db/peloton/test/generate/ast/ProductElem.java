@@ -2,7 +2,6 @@ package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import com.google.common.collect.ImmutableList;
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
-import edu.cmu.cs.db.peloton.test.generate.Context;
 import edu.cmu.cs.db.peloton.test.generate.Iterators;
 
 import java.util.Collections;
@@ -22,7 +21,7 @@ import java.util.List;
  * (e.g. + takes two integer expressions)
  * The ProductElem class uses a template method pattern that relies on the
  * user specifying the elements to be combined in the method args, and knows
- * how to generate all values given how to generate values of the argument
+ * how to generate all valuesOf given how to generate valuesOf of the argument
  * ast elements.
  */
 public abstract class ProductElem implements Ast.Elem {
@@ -34,10 +33,10 @@ public abstract class ProductElem implements Ast.Elem {
     protected abstract ImmutableList<Ast.Elem> args();
 
     /**
-     * Given values of the argument types in the order specified in args, produce
+     * Given valuesOf of the argument types in the order specified in args, produce
      * a value of this type (e.g. given * and foo, produce SELECT * FROM foo)
      *
-     * @param args values of the arguments
+     * @param args valuesOf of the arguments
      * @return the resulting value of this type
      */
     protected abstract String format(List<String> args);
@@ -83,7 +82,7 @@ public abstract class ProductElem implements Ast.Elem {
         return Iterators.foldLeft(recursive, Collections.emptyIterator(), Iterators::chain);
     }
 
-    // Recursively gets all product values for a smaller list given a value for the head of
+    // Recursively gets all product valuesOf for a smaller list given a value for the head of
     // the current list
     private static Iterator<AlmostClause> recurse(DatabaseDefinition db, Ast.Clause one, int depth,
                                                   List<Ast.Elem> toIterate, int currentIndex) {
@@ -94,7 +93,7 @@ public abstract class ProductElem implements Ast.Elem {
     }
 
     // Merges a clause with an almost clause by taking the union of the two contexts and
-    // adding the string value of other to the list of values in one
+    // adding the string value of other to the list of valuesOf in one
     private static AlmostClause merge(AlmostClause one, Ast.Clause other) {
         return new AlmostClause(
                 ImmutableList.<String>builder()

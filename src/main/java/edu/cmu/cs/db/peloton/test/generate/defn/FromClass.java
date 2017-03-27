@@ -1,7 +1,7 @@
 package edu.cmu.cs.db.peloton.test.generate.defn;
 
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
-import edu.cmu.cs.db.peloton.test.generate.Context;
+import edu.cmu.cs.db.peloton.test.generate.ast.Context;
 import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
 
 import java.util.Iterator;
@@ -13,7 +13,7 @@ public class FromClass implements Ast.Elem {
     @Override
     public Iterator<Ast.Clause> allClauses(DatabaseDefinition db, Context context, int depth) {
         return db.tables()
-                .map(a -> new Ast.Clause(a, context.addToScope(a)))
+                .map(a -> new Ast.Clause(a, context.addToScope(Ast.Sort.TABLE, a)))
                 .iterator();
     }
 }
