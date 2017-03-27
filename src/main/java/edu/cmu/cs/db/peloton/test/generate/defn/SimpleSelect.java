@@ -19,6 +19,6 @@ public class SimpleSelect extends ProductElem {
 
     @Override
     protected String format(List<String> args) {
-        return String.format("SELECT %s FROM %s", args.get(1), args.get(0));
+        return String.format("SELECT %s FROM %s;", args.get(1), args.get(0));
     }
 }
