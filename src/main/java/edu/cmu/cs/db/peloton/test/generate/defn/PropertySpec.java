@@ -28,7 +28,7 @@ public class PropertySpec implements Ast.Elem {
         Map<String, SQLType> columns = db.getTable(table);
         return columns.keySet().stream()
                 .map(a -> table + "." + a)
-                .map(a -> new Ast.Clause(a, context))
+                .map(a -> new Ast.Clause(a, context.addToScope(Ast.Sort.COLUMN, a)))
                 .iterator();
     }
 }

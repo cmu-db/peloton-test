@@ -1,7 +1,7 @@
 package edu.cmu.cs.db.peloton.test.common;
 
 import edu.cmu.cs.db.peloton.test.generate.ast.Context;
-import edu.cmu.cs.db.peloton.test.generate.defn.SimpleSelect;
+import edu.cmu.cs.db.peloton.test.generate.defn.Select;
 
 import java.sql.*;
 
@@ -23,7 +23,7 @@ public class Main {
                         String.format("jdbc:postgresql://%s:%d/%s", hostname, port, dbName));
             }
         }.getDatabaseDefinition(args[0], Integer.parseInt(args[1]), args[2]);
-        new SimpleSelect().allClauses(db, Context.EMPTY, 0)
+        new Select().allClauses(db, Context.EMPTY, 0)
                 .forEachRemaining(a -> System.out.println(a.getClause()));
     }
 }

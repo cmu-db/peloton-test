@@ -10,15 +10,15 @@ import java.util.List;
 /**
  * Created by tianyuli on 3/20/17.
  */
-public class SimpleSelect extends ProductElem {
+public class Select extends ProductElem {
     @Override
     protected ImmutableList<Ast.Elem> args() {
-        // FROM ... SELECT ...
-        return ImmutableList.of(new ListElem(new FromClass()), new SelectProp());
+        // FROM ... SELECT ... WHERE...
+        return ImmutableList.of(new ListElem(new FromClass()), new SelectProp(), new ListElem(new SearchCondition()));
     }
 
     @Override
     protected String format(List<String> args) {
-        return String.format("SELECT %s FROM %s;", args.get(1), args.get(0));
+        return String.format("SELECT %s FROM %s WHERE %s;", args.get(1), args.get(0), args.get(2));
     }
 }

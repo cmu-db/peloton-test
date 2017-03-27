@@ -33,7 +33,9 @@ public class SelectProp extends SumElem {
         );
 
         List<Ast.Elem> aggregateProps = baseProps.stream()
-                .map(prop -> new ListElem(new AggregateFunc(prop)))
+                // TODO: temporarily changed to keep down combination size
+                // .map(prop -> new ListElem(new AggregateFunc(prop)))
+                .map(prop -> new AggregateFunc(prop))
                 .collect(Collectors.toList());
 
         return new ImmutableList.Builder<Ast.Elem>()
