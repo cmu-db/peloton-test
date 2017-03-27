@@ -48,7 +48,7 @@ public abstract class DatabaseWrapper {
         ResultSet columns = metaData.getColumns(null, null, table, null);
         while (columns.next()) {
             builder.column(columns.getString("COLUMN_NAME"),
-                    columns.getString("TYPE_NAME"));
+                    columns.getInt("DATA_TYPE"));
         }
     }
 }
