@@ -2,6 +2,8 @@ package edu.cmu.cs.db.peloton.test.common;
 
 import com.google.common.collect.ImmutableMap;
 
+import java.sql.JDBCType;
+import java.sql.SQLType;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -9,9 +11,9 @@ import java.util.stream.Stream;
  * Created by Tianyu on 3/26/17.
  */
 public final class DatabaseDefinition {
-    private final Map<String, Map<String, SqlType>> tables;
+    private final Map<String, Map<String, SQLType>> tables;
 
-    private DatabaseDefinition(Map<String, Map<String, SqlType>> tables) {
+    private DatabaseDefinition(Map<String, Map<String, SQLType>> tables) {
         this.tables = tables;
     }
 
@@ -19,8 +21,8 @@ public final class DatabaseDefinition {
      * A Builder object for DatabaseDefinition
      */
     public static class Builder {
-        private ImmutableMap.Builder<String, Map<String, SqlType>> tableBuilder = ImmutableMap.builder();
-        private ImmutableMap.Builder<String, SqlType> columnsBuilder;
+        private ImmutableMap.Builder<String, Map<String, SQLType>> tableBuilder = ImmutableMap.builder();
+        private ImmutableMap.Builder<String, SQLType> columnsBuilder;
         private String currTable;
 
         /**
@@ -58,7 +60,7 @@ public final class DatabaseDefinition {
             if (currTable == null) {
                 throw new IllegalStateException("No table being defined");
             }
-            columnsBuilder.put(name, SqlType.valueOf(type));
+            columnsBuilder.put(name, JDBCType.valueOf(type));
             return this;
         }
 
@@ -87,7 +89,7 @@ public final class DatabaseDefinition {
      *
      * @return the stream
      */
-    public Stream<Map.Entry<String, SqlType>> allColumns() {
+    public Stream<Map.Entry<String, SQLType>> allColumns() {
         return tables.values().stream().flatMap(a -> a.entrySet().stream());
     }
 
@@ -97,7 +99,7 @@ public final class DatabaseDefinition {
      * @param tableName the table name
      * @return the table
      */
-    public Map<String, SqlType> getTable(String tableName) {
+    public Map<String, SQLType> getTable(String tableName) {
         return tables.get(tableName);
     }
 

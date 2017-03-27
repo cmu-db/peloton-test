@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
+import java.sql.SQLType;
 import java.util.*;
 
 // TODO change to mutable if performance becomes an issue
@@ -11,13 +12,12 @@ import java.util.*;
  * Context for SQL clauses
  */
 public final class Context {
-    // type -> variable name
-    private final Map<String, String> variables;
+    private final Map<SQLType, String> variables;
     private final Set<String> tableScope;
 
     public static final Context EMPTY = new Context(Collections.emptyMap(), Collections.emptySet());
 
-    private Context(Map<String, String> variables,
+    private Context(Map<SQLType, String> variables,
                     Set<String> scope) {
         this.variables = variables;
         this.tableScope = scope;

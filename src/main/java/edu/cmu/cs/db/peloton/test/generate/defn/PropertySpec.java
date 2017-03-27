@@ -1,11 +1,11 @@
 package edu.cmu.cs.db.peloton.test.generate.defn;
 
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
-import edu.cmu.cs.db.peloton.test.common.SqlType;
 import edu.cmu.cs.db.peloton.test.generate.Context;
 import edu.cmu.cs.db.peloton.test.generate.Iterators;
 import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
 
+import java.sql.SQLType;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class PropertySpec implements Ast.Elem {
     }
 
     private static Iterator<Ast.Clause> forTable(DatabaseDefinition db, Context context, String table) {
-        Map<String, SqlType> columns = db.getTable(table);
+        Map<String, SQLType> columns = db.getTable(table);
         return columns.keySet().stream()
                 .map(a -> table + "." + a)
                 .map(a -> new Ast.Clause(a, context))
