@@ -14,7 +14,6 @@ import java.util.Random;
  * Created by tianyuli on 3/20/17.
  */
 public class Main {
-    public static String[] args;
     public static DatabaseWrapper db;
     public static Ast.StochasticElem tested;
     public static Random random;
@@ -25,14 +24,13 @@ public class Main {
      * @throws SQLException the sql exception
      */
     public static void main(String[] args) throws SQLException {
-        Main.args = args;
-        db = new DatabaseWrapper(null){
+        db = new DatabaseWrapper(null, args[0], Integer.parseInt(args[1]), args[2]){
             @Override
-            public Connection getConnection(String hostname, int port, String dbName) throws SQLException {
+            protected Connection initiateConnection(String hostname, int port, String dbName) throws SQLException {
                 return DriverManager.getConnection(
                         String.format("jdbc:postgresql://%s:%d/%s", hostname, port, dbName));
             }
-        };//.getDatabaseDefinition(args[0], Integer.parseInt(args[1]), args[2]);
+        };
         tested = new Select();
         random = new Random();
 

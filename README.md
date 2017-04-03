@@ -5,7 +5,7 @@ You can find more information about the project in the documentation folder.
 
 To run the command line tool for query generation, execute the following command
 ```
-gradle run -PappArgs="[<hostname>, <port>, <db-name>]".
+gradle run -PappArgs="[<hostName>, <port>, <db-name>]".
 ```
 
 Currently only postgresql is supported

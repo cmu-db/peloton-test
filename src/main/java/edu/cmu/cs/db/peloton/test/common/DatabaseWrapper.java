@@ -6,38 +6,43 @@ import java.util.Map;
 /**
  * Provide access to a database for the application
  */
-public abstract class DatabaseWrapper {
+public abstract class DatabaseWrapper implements AutoCloseable {
     private Map<SQLType, Hint> valuePopulationHints;
+    private Connection conn;
+    private final String hostName, dbName;
+    private final int port;
 
-    public DatabaseWrapper(Map<SQLType, Hint> hints) {
 
+    public DatabaseWrapper(Map<SQLType, Hint> hints, String hostName, int port, String dbName) {
+        this.valuePopulationHints = hints;
+        conn = null;
+        this.hostName = hostName;
+        this.port = port;
+        this.dbName = dbName;
     }
+
+    protected abstract Connection initiateConnection(String hostname, int port, String dbName) throws SQLException;
 
     /**
      * Gets connection.
      *
-     * @param hostname the hostname
-     * @param port     the port
-     * @param dbName   the db name
-     * @return the connection
+     * @return the connection to specified database. The connection is established the first
+     * time this method is called
      * @throws SQLException the sql exception
      */
-    public abstract Connection getConnection(String hostname, int port, String dbName) throws SQLException;
-
-    public void prepare(Map<SQLType, Hint> hints) {
-
+    public Connection getConnection() throws SQLException {
+        return conn == null ? initiateConnection(hostName, port ,dbName) : conn;
     }
+
     /**
      * Gets database definition.
      *
-     * @param hostname the hostname
-     * @param port     the port
-     * @param dbName   the db name
      * @return the database definition
      */
-    public DatabaseDefinition getDatabaseDefinition(String hostname, int port, String dbName) {
+    public DatabaseDefinition getDatabaseDefinition() {
             DatabaseDefinition.Builder result = new DatabaseDefinition.Builder();
-        try (Connection conn = getConnection(hostname, port, dbName)) {
+        try {
+            Connection conn = getConnection();
             DatabaseMetaData metaData = conn.getMetaData();
             String[] types = {"TABLE"};
             ResultSet tables = metaData.getTables(null, null, "%", types);
@@ -52,9 +57,16 @@ public abstract class DatabaseWrapper {
         }
     }
 
+    @Override
+    public void close() throws Exception {
+        if (conn != null) {
+            conn.close();
+        }
+    }
+
     private static void addTable(DatabaseMetaData metaData,
-                                            String table,
-                                            DatabaseDefinition.Builder builder) throws SQLException {
+                                 String table,
+                                 DatabaseDefinition.Builder builder) throws SQLException {
         ResultSet columns = metaData.getColumns(null, null, table, null);
         while (columns.next()) {
             builder.column(columns.getString("COLUMN_NAME"),
