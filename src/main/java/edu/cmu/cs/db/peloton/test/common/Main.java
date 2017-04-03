@@ -3,6 +3,9 @@ package edu.cmu.cs.db.peloton.test.common;
 import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
 import edu.cmu.cs.db.peloton.test.generate.ast.Context;
 import edu.cmu.cs.db.peloton.test.generate.defn.stochastic.Select;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
 
 import java.sql.*;
 import java.util.Random;
@@ -11,6 +14,10 @@ import java.util.Random;
  * Created by tianyuli on 3/20/17.
  */
 public class Main {
+    public static String[] args;
+    public static DatabaseWrapper db;
+    public static Ast.StochasticElem tested;
+    public static Random random;
     /**
      * The entry point of application.
      *
@@ -18,16 +25,21 @@ public class Main {
      * @throws SQLException the sql exception
      */
     public static void main(String[] args) throws SQLException {
-        DatabaseDefinition db = new DatabaseWrapper(null){
+        Main.args = args;
+        db = new DatabaseWrapper(null){
             @Override
             public Connection getConnection(String hostname, int port, String dbName) throws SQLException {
                 return DriverManager.getConnection(
                         String.format("jdbc:postgresql://%s:%d/%s", hostname, port, dbName));
             }
-        }.getDatabaseDefinition(args[0], Integer.parseInt(args[1]), args[2]);
-        Ast.StochasticElem select = new Select();
-        for (int i = 0; i < 20; i++) {
-            System.out.println(select.generate(db, Context.EMPTY, new Random()).getClause());
+        };//.getDatabaseDefinition(args[0], Integer.parseInt(args[1]), args[2]);
+        tested = new Select();
+        random = new Random();
+
+        Result result = JUnitCore.runClasses(TestQuery.class);
+        for (Failure f : result.getFailures()) {
+            System.out.println(f.toString());
         }
+        System.out.println(result.wasSuccessful());
     }
 }
