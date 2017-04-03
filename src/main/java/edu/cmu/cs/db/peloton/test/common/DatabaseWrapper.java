@@ -1,11 +1,18 @@
 package edu.cmu.cs.db.peloton.test.common;
 
 import java.sql.*;
+import java.util.Map;
 
 /**
  * Provide access to a database for the application
  */
 public abstract class DatabaseWrapper {
+    private Map<SQLType, Hint> valuePopulationHints;
+
+    public DatabaseWrapper(Map<SQLType, Hint> hints) {
+
+    }
+
     /**
      * Gets connection.
      *
@@ -17,6 +24,9 @@ public abstract class DatabaseWrapper {
      */
     public abstract Connection getConnection(String hostname, int port, String dbName) throws SQLException;
 
+    public void prepare(Map<SQLType, Hint> hints) {
+
+    }
     /**
      * Gets database definition.
      *
@@ -48,7 +58,7 @@ public abstract class DatabaseWrapper {
         ResultSet columns = metaData.getColumns(null, null, table, null);
         while (columns.next()) {
             builder.column(columns.getString("COLUMN_NAME"),
-                    columns.getInt("DATA_TYPE"));
+                    columns.getInt("DATA_TYPE"), null);
         }
     }
 }

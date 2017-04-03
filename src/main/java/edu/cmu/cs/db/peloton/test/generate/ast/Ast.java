@@ -1,9 +1,12 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
+import com.google.common.base.Preconditions;
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
 
 import java.sql.JDBCType;
 import java.util.*;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Static Utility class that groups together various definitions in the
@@ -24,6 +27,8 @@ public final class Ast {
          * @param context the context
          */
         public Clause(String clause, Context context) {
+            checkNotNull(clause);
+            checkNotNull(context);
             this.clause = clause;
             this.context = context;
         }
@@ -79,6 +84,10 @@ public final class Ast {
          * @return the iterator of all possible valuesOf of this type given the context
          */
         Iterator<Clause> allClauses(DatabaseDefinition db, Context context, int depth);
+    }
+
+    public interface StochasticElem {
+        Clause generate(DatabaseDefinition db, Context context, Random random);
     }
 
     /**

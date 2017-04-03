@@ -1,6 +1,7 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
-import edu.cmu.cs.db.peloton.test.generate.Iterators;
+import edu.cmu.cs.db.peloton.test.generate.util.Iterators;
+import edu.cmu.cs.db.peloton.test.generate.ast.exhaustive.ListElem;
 import org.junit.Test;
 
 import java.util.List;

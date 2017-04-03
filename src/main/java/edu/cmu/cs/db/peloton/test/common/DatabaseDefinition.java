@@ -11,9 +11,27 @@ import java.util.stream.Stream;
  * Created by Tianyu on 3/26/17.
  */
 public final class DatabaseDefinition {
-    private final Map<String, Map<String, SQLType>> tables;
+    private final Map<String, Map<String, ColumnInfo>> tables;
 
-    private DatabaseDefinition(Map<String, Map<String, SQLType>> tables) {
+    public static final class ColumnInfo {
+        private final SQLType type;
+        private final Hint valueHint;
+
+        ColumnInfo(SQLType type, Hint valueHint) {
+            this.type = type;
+            this.valueHint = valueHint;
+        }
+
+        public SQLType getType() {
+            return type;
+        }
+
+        public Hint getValueHint() {
+            return valueHint;
+        }
+    }
+
+    private DatabaseDefinition(Map<String, Map<String, ColumnInfo>> tables) {
         this.tables = tables;
     }
 
@@ -21,8 +39,8 @@ public final class DatabaseDefinition {
      * A Builder object for DatabaseDefinition
      */
     public static class Builder {
-        private ImmutableMap.Builder<String, Map<String, SQLType>> tableBuilder = ImmutableMap.builder();
-        private ImmutableMap.Builder<String, SQLType> columnsBuilder;
+        private ImmutableMap.Builder<String, Map<String, ColumnInfo>> tableBuilder = ImmutableMap.builder();
+        private ImmutableMap.Builder<String, ColumnInfo> columnsBuilder;
         private String currTable;
 
         /**
@@ -56,11 +74,11 @@ public final class DatabaseDefinition {
          * @return self reference for method chaining
          * @throws IllegalStateException if no table is being defined
          */
-        public DatabaseDefinition.Builder column(String name, int typeCode) {
+        public DatabaseDefinition.Builder column(String name, int typeCode, Hint hint) {
             if (currTable == null) {
                 throw new IllegalStateException("No table being defined");
             }
-            columnsBuilder.put(name, JDBCType.valueOf(typeCode));
+            columnsBuilder.put(name, new ColumnInfo(JDBCType.valueOf(typeCode), hint));
             return this;
         }
 
@@ -84,12 +102,16 @@ public final class DatabaseDefinition {
         return tables.keySet().stream();
     }
 
+    public int tableCount() {
+        return tables.size();
+    }
+
     /**
      * All columns stream.
      *
      * @return the stream
      */
-    public Stream<Map.Entry<String, SQLType>> allColumns() {
+    public Stream<Map.Entry<String, ColumnInfo>> allColumns() {
         return tables.values().stream().flatMap(a -> a.entrySet().stream());
     }
 
@@ -99,7 +121,7 @@ public final class DatabaseDefinition {
      * @param tableName the table name
      * @return the table
      */
-    public Map<String, SQLType> getTable(String tableName) {
+    public Map<String, ColumnInfo> getTable(String tableName) {
         return tables.get(tableName);
     }
 

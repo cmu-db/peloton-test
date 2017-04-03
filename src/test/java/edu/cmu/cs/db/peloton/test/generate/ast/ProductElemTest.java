@@ -1,7 +1,8 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import com.google.common.collect.ImmutableList;
-import edu.cmu.cs.db.peloton.test.generate.Iterators;
+import edu.cmu.cs.db.peloton.test.generate.util.Iterators;
+import edu.cmu.cs.db.peloton.test.generate.ast.exhaustive.ProductElem;
 import org.junit.Test;
 
 import java.util.List;
