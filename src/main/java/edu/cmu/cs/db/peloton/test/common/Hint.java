@@ -5,6 +5,7 @@ import java.util.Random;
 /**
  * Created by tianyuli on 4/3/17.
  */
+@FunctionalInterface
 public interface Hint {
     String getValue(Random random);
 }

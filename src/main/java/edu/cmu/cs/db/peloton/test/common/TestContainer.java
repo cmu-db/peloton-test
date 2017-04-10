@@ -19,7 +19,7 @@ import static org.junit.runners.Parameterized.*;
  * Created by tianyuli on 4/3/17.
  */
 @RunWith(Parameterized.class)
-public class TestQuery {
+public class TestContainer {
     @Parameters(name = "{index}: {0}")
     public static Iterable<?> data() {
         List<String> queries = new ArrayList<>();
@@ -35,7 +35,7 @@ public class TestQuery {
     @Test
     public void test() throws SQLException {
         testEqual(Main.testDb.getConnection().createStatement().executeQuery(query),
-                Main.oracleDb.getConnection().createStatement().executeQuery(query));
+                Main.truthDb.getConnection().createStatement().executeQuery(query));
     }
 
     private static void testEqual(ResultSet truth, ResultSet target) throws SQLException {

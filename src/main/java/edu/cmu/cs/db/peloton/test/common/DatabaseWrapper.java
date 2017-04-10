@@ -9,6 +9,7 @@ import java.util.Map;
 public abstract class DatabaseWrapper implements AutoCloseable {
     private Map<SQLType, Hint> valuePopulationHints;
     private Connection conn;
+    private DatabaseDefinition definition;
     private final String hostName, dbName;
     private final int port;
 
@@ -40,7 +41,11 @@ public abstract class DatabaseWrapper implements AutoCloseable {
      * @return the database definition
      */
     public DatabaseDefinition getDatabaseDefinition() {
-            DatabaseDefinition.Builder result = new DatabaseDefinition.Builder();
+        if (definition != null) {
+            return definition;
+        }
+
+        DatabaseDefinition.Builder result = new DatabaseDefinition.Builder();
         try {
             Connection conn = getConnection();
             DatabaseMetaData metaData = conn.getMetaData();
@@ -51,11 +56,13 @@ public abstract class DatabaseWrapper implements AutoCloseable {
                 result.table(tableName);
                 addTable(metaData, tableName, result);
             }
-            return result.build();
+            definition = result.build();
+            return definition;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     @Override
     public void close() throws Exception {
@@ -64,13 +71,13 @@ public abstract class DatabaseWrapper implements AutoCloseable {
         }
     }
 
-    private static void addTable(DatabaseMetaData metaData,
+    private void addTable(DatabaseMetaData metaData,
                                  String table,
                                  DatabaseDefinition.Builder builder) throws SQLException {
         ResultSet columns = metaData.getColumns(null, null, table, null);
         while (columns.next()) {
-            builder.column(columns.getString("COLUMN_NAME"),
-                    columns.getInt("DATA_TYPE"), null);
+            SQLType type = JDBCType.valueOf(columns.getInt("DATA_TYPE"));
+            builder.column(columns.getString("COLUMN_NAME"), type, valuePopulationHints.get(type));
         }
     }
 }
