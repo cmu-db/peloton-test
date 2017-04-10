@@ -26,16 +26,17 @@ repositories {
     mavenCentral()
 }
 
+
 dependencies {
     compile group: 'junit', name: 'junit', version: '4.12'
-    runtime fileTree(dir: 'lib', include: '*.jar')
+    compile group: 'com.google.guava', name: 'guava', version: '21.0'
+    compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
+    compile group: 'org.apache.ant', name: 'ant-junit', version: '1.10.1'
 }
 
 dependencies {
-    compile group: 'com.google.guava', name: 'guava', version: '21.0'
-    compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
+    runtime fileTree(dir: 'lib', include: '*.jar')
 }
-
 
 checkstyle {
     ignoreFailures = true
