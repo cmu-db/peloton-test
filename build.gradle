@@ -32,6 +32,7 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '21.0'
     compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
     compile group: 'org.apache.ant', name: 'ant-junit', version: '1.10.1'
+    compile group: 'com.beust', name: 'jcommander', version: '1.7'
 }
 
 dependencies {

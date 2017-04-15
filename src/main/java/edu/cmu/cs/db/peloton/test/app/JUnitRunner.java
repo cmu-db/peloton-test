@@ -1,13 +1,12 @@
-package edu.cmu.cs.db.peloton.test.common;
+package edu.cmu.cs.db.peloton.test.app;
 
-import com.google.common.collect.ImmutableMap;
-import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
-import edu.cmu.cs.db.peloton.test.generate.defn.stochastic.Select;
+import edu.cmu.cs.db.peloton.test.common.TestContainer;
 import junit.framework.Test;
 import junit.framework.TestResult;
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitResultFormatter;
 import org.apache.tools.ant.taskdefs.optional.junit.JUnitTest;
 import org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter;
+import org.junit.internal.TextListener;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -18,87 +17,27 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.sql.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
- * Created by tianyuli on 3/20/17.
+ * Created by tianyuli on 4/14/17.
  */
-public class Main {
-    static DatabaseWrapper testDb;
-    static DatabaseWrapper truthDb;
-    static Ast.StochasticElem tested;
-    static Random random;
-    /**
-     * The entry point of application.
-     *
-     * @param args the input arguments
-     * @throws SQLException the sql exception
-     */
-    public static void main(String[] args) throws SQLException {
-        Map<SQLType, Hint> hints = ImmutableMap.<SQLType, Hint>builder()
-                .put(JDBCType.INTEGER, r -> "1")
-                .put(JDBCType.VARCHAR, r -> "'foo'")
-                .build();
+public class JUnitRunner {
 
-        truthDb = new DatabaseWrapper(hints, args[0], Integer.parseInt(args[1]), args[2]){
-            @Override
-            protected Connection initiateConnection(String hostname, int port, String dbName) throws SQLException {
-                return DriverManager.getConnection(
-                        String.format("jdbc:postgresql://%s:%d/%s", hostname, port, dbName));
-            }
-        };
-
-        testDb = new DatabaseWrapper(hints, args[3], Integer.parseInt(args[4]), args[5]) {
-            @Override
-            protected Connection initiateConnection(String hostname, int port, String dbName) throws SQLException {
-                return DriverManager.getConnection(
-                        String.format("jdbc:postgresql://%s:%d/%s", hostname, port, dbName));
-            }
-        };
-        tested = new Select();
-        random = new Random();
-
-        prepare();
-        /* Adopted from https://ttddyy.github.io/generate-junit-xml-report-from-junitcore/ */
+    public void runTests(String outputDir) {
         JUnitCore junit = new JUnitCore();
-        junit.addListener(new JUnitResultFormatterAsRunListener(new XMLJUnitResultFormatter()) {
-            @Override
-            public void testStarted(Description description) throws Exception {
-                formatter.setOutput(new FileOutputStream(
-                        new File("test_reports/","TEST-" + description.getDisplayName() + ".xml")));
-                super.testStarted(description);
-            }
-        });
+        if (outputDir == null) {
+            junit.addListener(new TextListener(System.out));
+        } else {
+            junit.addListener(new JUnitResultFormatterAsRunListener(new XMLJUnitResultFormatter()) {
+                @Override
+                public void testStarted(Description description) throws Exception {
+                    formatter.setOutput(new FileOutputStream(
+                            new File(outputDir, "TEST-" + description.getDisplayName() + ".xml")));
+                    super.testStarted(description);
+                }
+            });
+        }
         junit.run(TestContainer.class);
-    }
-
-    private static void prepare() {
-        DatabaseDefinition definition = truthDb.getDatabaseDefinition();
-        definition.tables().forEach(table -> {
-            try {
-                generateTable(testDb.getConnection(), truthDb.getConnection(), definition, table, random);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    private static void generateTable(Connection conn1,
-                                      Connection conn2,
-                                      DatabaseDefinition def,
-                                      String table,
-                                      Random random) throws SQLException {
-        Map<String, DatabaseDefinition.ColumnInfo> tableDef = def.getTable(table);
-        List<String> values = tableDef.values().stream()
-                .map(info -> info.getValueHint().getValue(random))
-                .collect(Collectors.toList());
-        String query = String.format("INSERT INTO %s VALUES (%s)", table, String.join(",", values));
-        conn1.createStatement().executeUpdate(query);
-        conn2.createStatement().executeUpdate(query);
     }
 
     /* Adopted from https://github.com/cloudbees/junit-standalone-runner/ */
@@ -218,6 +157,4 @@ public class Main {
             super.testIgnored(description);
         }
     }
-
-
 }

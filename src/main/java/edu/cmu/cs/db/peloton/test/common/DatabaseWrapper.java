@@ -6,23 +6,18 @@ import java.util.Map;
 /**
  * Provide access to a database for the application
  */
-public abstract class DatabaseWrapper implements AutoCloseable {
+public class DatabaseWrapper implements AutoCloseable {
     private Map<SQLType, Hint> valuePopulationHints;
     private Connection conn;
     private DatabaseDefinition definition;
-    private final String hostName, dbName;
-    private final int port;
+    private final String dbString;
 
 
-    public DatabaseWrapper(Map<SQLType, Hint> hints, String hostName, int port, String dbName) {
+    public DatabaseWrapper(Map<SQLType, Hint> hints, String dbString) {
         this.valuePopulationHints = hints;
         conn = null;
-        this.hostName = hostName;
-        this.port = port;
-        this.dbName = dbName;
+        this.dbString = dbString;
     }
-
-    protected abstract Connection initiateConnection(String hostname, int port, String dbName) throws SQLException;
 
     /**
      * Gets connection.
@@ -32,7 +27,7 @@ public abstract class DatabaseWrapper implements AutoCloseable {
      * @throws SQLException the sql exception
      */
     public Connection getConnection() throws SQLException {
-        return conn == null ? initiateConnection(hostName, port ,dbName) : conn;
+        return conn == null ? DriverManager.getConnection(dbString) : conn;
     }
 
     /**

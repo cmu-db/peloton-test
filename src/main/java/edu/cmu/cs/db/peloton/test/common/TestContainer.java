@@ -1,6 +1,6 @@
 package edu.cmu.cs.db.peloton.test.common;
 
-import edu.cmu.cs.db.peloton.test.generate.ast.Context;
+import edu.cmu.cs.db.peloton.test.app.Main;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -20,15 +20,12 @@ import static org.junit.runners.Parameterized.*;
  */
 @RunWith(Parameterized.class)
 public class TestContainer {
+
     @Parameters(name = "{index}: {0}")
     public static Iterable<?> data() {
-        List<String> queries = new ArrayList<>();
-        DatabaseDefinition definition = Main.testDb.getDatabaseDefinition();
-        for (int i = 0; i < 20; i++) {
-            queries.add(Main.tested.generate(definition, Context.EMPTY, Main.random).getClause());
-        }
-        return queries;
+        return Main.queryProvider.queries();
     }
+
     @Parameter
     public String query;
 
@@ -46,7 +43,7 @@ public class TestContainer {
 
         Set<List<Object>> targetResults = new HashSet<>();
         while (target.next()) {
-            targetResults.remove(getRow(target, target.getMetaData().getColumnCount()));
+            targetResults.add(getRow(target, target.getMetaData().getColumnCount()));
         }
 
         assertEquals(truthResults, targetResults);
