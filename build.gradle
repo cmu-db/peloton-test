@@ -14,11 +14,11 @@ configurations.all {
     }
 }
 
-mainClassName = "edu.cmu.cs.db.peloton.test.common.Main"
+mainClassName = "edu.cmu.cs.db.peloton.test.app.Main"
 
 run {
-    if (project.hasProperty("appArgs")) {
-        args Eval.me(appArgs)
+    if (project.hasProperty("args")) {
+        args project.args.split('\\s')
     }
 }
 
