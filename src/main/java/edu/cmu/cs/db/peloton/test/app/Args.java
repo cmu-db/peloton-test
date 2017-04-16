@@ -20,6 +20,10 @@ public class Args {
             description = "path to output dir, if empty then just print to command line")
     private String outDir;
 
+    @Parameter(names = "-batchsize",
+            description = "maximum size of a batch to be tested")
+    private int batchSize = 50;
+
     public String getConfigFile() {
         return configFile;
     }
@@ -30,5 +34,9 @@ public class Args {
 
     public String getOutDir() {
         return outDir;
+    }
+
+    public int getBatchSize() {
+        return batchSize;
     }
 }

@@ -10,13 +10,15 @@ public class DatabaseWrapper implements AutoCloseable {
     private Map<SQLType, Hint> valuePopulationHints;
     private Connection conn;
     private DatabaseDefinition definition;
-    private final String dbString;
+    private final String dbString, username, password;
 
 
-    public DatabaseWrapper(Map<SQLType, Hint> hints, String dbString) {
+    public DatabaseWrapper(Map<SQLType, Hint> hints, String dbString, String username, String password) {
         this.valuePopulationHints = hints;
         conn = null;
         this.dbString = dbString;
+        this.username = username;
+        this.password = password;
     }
 
     /**
@@ -27,7 +29,14 @@ public class DatabaseWrapper implements AutoCloseable {
      * @throws SQLException the sql exception
      */
     public Connection getConnection() throws SQLException {
-        return conn == null ? DriverManager.getConnection(dbString) : conn;
+        if (conn == null) {
+            if (username.equals("")) {
+                conn = DriverManager.getConnection(dbString);
+            } else {
+                conn = DriverManager.getConnection(dbString, username, password);
+            }
+        }
+        return conn;
     }
 
     /**

@@ -1,2 +1,6 @@
 jdbc:postgresql://127.0.0.1:5432/peloton_test
+username
+password
 jdbc:postgresql://127.0.0.1:5432/peloton_truth
+username
+password

@@ -6,10 +6,10 @@ import edu.cmu.cs.db.peloton.test.common.DatabaseWrapper;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.util.Iterator;
 
 /**
  * Created by tianyuli on 3/20/17.
@@ -17,7 +17,8 @@ import java.sql.*;
 public class Main {
     public static DatabaseWrapper testDb;
     public static DatabaseWrapper truthDb;
-    public static QueryProvider queryProvider;
+    public static Iterator<String> queryProvider;
+    public static int batchSize;
 
     /**
      * The entry point of application.
@@ -30,18 +31,15 @@ public class Main {
         new JCommander(parsedArgs, args);
 
         try (BufferedReader config = new BufferedReader(new FileReader(parsedArgs.getConfigFile()))) {
-            testDb = new DatabaseWrapper(null, config.readLine());
-            truthDb = new DatabaseWrapper(null, config.readLine());
+            testDb = new DatabaseWrapper(null, config.readLine(), config.readLine(), config.readLine());
+            truthDb = new DatabaseWrapper(null, config.readLine(), config.readLine(), config.readLine());
         }
+        batchSize = parsedArgs.getBatchSize();
+        queryProvider = Files.lines(Paths.get(parsedArgs.getTraceFile())).iterator();
 
-        queryProvider = () -> () -> {
-            try {
-                return Files.lines(Paths.get(parsedArgs.getTraceFile())).iterator();
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
-        };
-
-        new JUnitRunner().runTests(parsedArgs.getOutDir());
+        while (queryProvider.hasNext()) {
+            new JUnitRunner().runTests(parsedArgs.getOutDir());
+            return;
+        }
     }
 }

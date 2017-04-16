@@ -1,5 +1,6 @@
 package edu.cmu.cs.db.peloton.test.common;
 
+import com.google.common.collect.Iterators;
 import edu.cmu.cs.db.peloton.test.app.Main;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +24,14 @@ public class TestContainer {
 
     @Parameters(name = "{index}: {0}")
     public static Iterable<?> data() {
-        return Main.queryProvider.queries();
+        List<String> queries = new ArrayList<>();
+        for (int i = 0; i < Main.batchSize; i++) {
+            if (!Main.queryProvider.hasNext()) {
+                break;
+            }
+            queries.add(Main.queryProvider.next());
+        }
+        return queries;
     }
 
     @Parameter
