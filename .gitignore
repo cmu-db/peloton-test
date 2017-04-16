@@ -71,3 +71,4 @@ hs_err_pid*
 
 .idea/
 test_reports/
+!/gradle/wrapper/gradle-wrapper.jar
