@@ -12,13 +12,15 @@ public class Args {
     private String configFile;
 
     @Parameter(names = "-trace",
-            description = "path to trace file with one query per line to execute",
-            required = true)
+            description = "path to trace file with one query per line to execute")
     private String traceFile;
 
     @Parameter(names = "-out",
             description = "path to output dir, if empty then just print to command line")
     private String outDir;
+
+    @Parameter(names = "-limit", description = "maximum amount of queries to be executed, only applies to generate")
+    private int limit = 5000;
 
     @Parameter(names = "-batchsize",
             description = "maximum size of a batch to be tested")
@@ -38,5 +40,9 @@ public class Args {
 
     public int getBatchSize() {
         return batchSize;
+    }
+
+    public int getLimit() {
+        return limit;
     }
 }

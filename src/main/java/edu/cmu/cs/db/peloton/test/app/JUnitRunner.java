@@ -22,7 +22,6 @@ import java.io.PrintStream;
  * Created by tianyuli on 4/14/17.
  */
 public class JUnitRunner {
-    private static final int BATCH_SIZE = 5000;
 
     public void runTests(String outputDir) {
         JUnitCore junit = new JUnitCore();

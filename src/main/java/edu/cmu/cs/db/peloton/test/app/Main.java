@@ -2,6 +2,8 @@ package edu.cmu.cs.db.peloton.test.app;
 
 import com.beust.jcommander.JCommander;
 import edu.cmu.cs.db.peloton.test.common.DatabaseWrapper;
+import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
+import edu.cmu.cs.db.peloton.test.generate.defn.stochastic.Select;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.Iterator;
+import java.util.Random;
 
 /**
  * Created by tianyuli on 3/20/17.
@@ -35,11 +38,12 @@ public class Main {
             truthDb = new DatabaseWrapper(null, config.readLine(), config.readLine(), config.readLine());
         }
         batchSize = parsedArgs.getBatchSize();
-        queryProvider = Files.lines(Paths.get(parsedArgs.getTraceFile())).iterator();
+        queryProvider = parsedArgs.getTraceFile() == null
+                ? Ast.fromAst(new Select(), parsedArgs.getLimit(),truthDb.getDatabaseDefinition(), new Random())
+                : Files.lines(Paths.get(parsedArgs.getTraceFile())).iterator();
 
         while (queryProvider.hasNext()) {
             new JUnitRunner().runTests(parsedArgs.getOutDir());
-            return;
         }
     }
 }

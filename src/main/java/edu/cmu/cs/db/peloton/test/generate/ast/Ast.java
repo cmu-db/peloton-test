@@ -148,6 +148,22 @@ public final class Ast {
         }
     }
 
+    public static Iterator<String> fromAst(Ast.StochasticElem elem, int limit, DatabaseDefinition db, Random random) {
+        return new Iterator<String>() {
+            private int i = 0;
+            @Override
+            public boolean hasNext() {
+                return i < limit;
+            }
+
+            @Override
+            public String next() {
+                i++;
+                return elem.generate(db, Context.EMPTY, random).getClause();
+            }
+        };
+    }
+
     private Ast() {
         // Should not instantiate
     }
