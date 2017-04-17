@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -34,9 +35,10 @@ public class Main {
         new JCommander(parsedArgs, args);
 
         try (BufferedReader config = new BufferedReader(new FileReader(parsedArgs.getConfigFile()))) {
-            testDb = new DatabaseWrapper(null, config.readLine(), config.readLine(), config.readLine());
-            truthDb = new DatabaseWrapper(null, config.readLine(), config.readLine(), config.readLine());
+            testDb = new DatabaseWrapper(Collections.emptyMap(), config.readLine(), config.readLine(), config.readLine());
+            truthDb = new DatabaseWrapper(Collections.emptyMap(), config.readLine(), config.readLine(), config.readLine());
         }
+
         batchSize = parsedArgs.getBatchSize();
         queryProvider = parsedArgs.getTraceFile() == null
                 ? Ast.fromAst(new Select(), parsedArgs.getLimit(),truthDb.getDatabaseDefinition(), new Random())
