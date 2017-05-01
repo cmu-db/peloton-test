@@ -1,6 +1,5 @@
 package edu.cmu.cs.db.peloton.test.generate.defn.exhaustive;
 
-import edu.cmu.cs.db.peloton.test.common.AggregateType;
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
 import edu.cmu.cs.db.peloton.test.generate.util.Iterators;
 import edu.cmu.cs.db.peloton.test.generate.ast.Ast;

@@ -1,12 +1,16 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
-import com.google.common.base.Preconditions;
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
+import edu.cmu.cs.db.peloton.test.generate.util.RandomUtils;
 
 import java.sql.JDBCType;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.*;
+import static edu.cmu.cs.db.peloton.test.generate.ast.Ast.ExpressionType.NUMERIC;
+import static edu.cmu.cs.db.peloton.test.generate.ast.Ast.ExpressionType.VARCHAR;
+import static edu.cmu.cs.db.peloton.test.generate.ast.Ast.ExpressionType.BOOLEAN;
 
 /**
  * Static Utility class that groups together various definitions in the
@@ -97,6 +101,70 @@ public final class Ast {
         // Marker interface
     }
 
+    public enum ExpressionType implements Type {
+        NUMERIC, VARCHAR, BOOLEAN, ANY, SET;
+
+        public boolean matches(ExpressionType type) {
+            if (type == ANY) {
+                return true;
+            } else {
+                return equals(type);
+            }
+        }
+    }
+
+    public static ExpressionType toExpressionType(JDBCType type) {
+        // TODO research SQL types
+        switch (type) {
+            case DOUBLE:
+            case FLOAT:
+            case INTEGER:
+            case NUMERIC:
+            case DECIMAL:
+                return NUMERIC;
+            case VARCHAR:
+            case LONGNVARCHAR:
+                return VARCHAR;
+            case BOOLEAN:
+                return BOOLEAN;
+            default:
+                throw new IllegalArgumentException("Unimplemented");
+        }
+    }
+
+    public static String constantOf(ExpressionType type, Random random) {
+        switch (type) {
+            case NUMERIC:
+                return Double.toString(random.nextDouble());
+            case VARCHAR:
+                int length = random.nextInt(10);
+                StringBuilder result = new StringBuilder("\"");
+                for (int i = 0; i < length; i++) {
+                    result.append((char) random.nextInt(26) + 'a');
+                }
+                result.append("\"");
+                return result.toString();
+            case BOOLEAN:
+                return random.nextBoolean() ? "TRUE" : "FALSE";
+            case ANY:
+                return constantOf(RandomUtils.randomElement(Arrays.asList(NUMERIC, VARCHAR, BOOLEAN), random), random);
+            default:
+                throw new IllegalArgumentException("Unimplemented");
+        }
+    }
+
+    public static String valueOf(DatabaseDefinition db, Context context, ExpressionType type, Random random) {
+        List<String> columns = context.valuesOf(Sort.TABLE).stream()
+                    .flatMap(t -> db.getTable(t).entrySet().stream()
+                            .filter(e -> toExpressionType(e.getValue().getType()).matches(type))
+                            .map(e -> t + "." + e.getKey()))
+                            .collect(Collectors.toList());
+            if (columns.isEmpty()) {
+                return constantOf(type, random);
+            }
+            return RandomUtils.randomElement(columns, random);
+    }
+
     /**
      * Sql language constructs
      */
@@ -104,49 +172,6 @@ public final class Ast {
         TABLE, COLUMN
     }
 
-    /**
-     * Sql types for variables
-     */
-    public static final class VarType implements Type {
-        private static final Map<JDBCType, VarType> INSTANCES = new EnumMap<>(JDBCType.class);
-
-        static {
-            for (JDBCType type : JDBCType.values()) {
-                INSTANCES.put(type, new VarType(type));
-            }
-        }
-
-        private final JDBCType type;
-
-        private VarType(JDBCType type) {
-            this.type = type;
-        }
-
-        /**
-         * returns a instance representing a variable of type.
-         *
-         * @param type the type
-         * @return the var type
-         */
-        public static VarType of(JDBCType type) {
-            return INSTANCES.get(type);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            VarType sqlType = (VarType) o;
-
-            return type == sqlType.type;
-        }
-
-        @Override
-        public int hashCode() {
-            return type.hashCode();
-        }
-    }
 
     public static Iterator<String> fromAst(Ast.StochasticElem elem, int limit, DatabaseDefinition db, Random random) {
         return new Iterator<String>() {

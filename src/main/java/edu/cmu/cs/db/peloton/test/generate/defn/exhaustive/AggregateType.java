@@ -1,4 +1,4 @@
-package edu.cmu.cs.db.peloton.test.common;
+package edu.cmu.cs.db.peloton.test.generate.defn.exhaustive;
 
 /**
  * Aggregate function type.

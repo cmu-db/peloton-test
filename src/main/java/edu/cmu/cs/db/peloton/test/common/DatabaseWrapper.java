@@ -80,7 +80,7 @@ public class DatabaseWrapper implements AutoCloseable {
                                  DatabaseDefinition.Builder builder) throws SQLException {
         ResultSet columns = metaData.getColumns(null, null, table, null);
         while (columns.next()) {
-            SQLType type = JDBCType.valueOf(columns.getInt("DATA_TYPE"));
+            JDBCType type = JDBCType.valueOf(columns.getInt("DATA_TYPE"));
             builder.column(columns.getString("COLUMN_NAME"), type, valuePopulationHints.get(type));
         }
     }
