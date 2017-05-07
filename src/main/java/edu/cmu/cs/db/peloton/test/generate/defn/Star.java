@@ -1,18 +1,19 @@
-package edu.cmu.cs.db.peloton.test.generate.defn.stochastic;
+package edu.cmu.cs.db.peloton.test.generate.defn;
 
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
 import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
 import edu.cmu.cs.db.peloton.test.generate.ast.Context;
 
+import java.util.Optional;
 import java.util.Random;
 
 /**
  * Created by tianyuli on 4/1/17.
  */
-public class Star implements Ast.StochasticElem {
+public class Star implements Ast.Elem {
     @Override
-    public Ast.Clause generate(DatabaseDefinition db, Context context, Random random) {
-        return new Ast.Clause("*", getNewContext(db, context));
+    public Optional<Ast.Clause> generate(DatabaseDefinition db, Context context, Random random) {
+        return Optional.of(new Ast.Clause("*", getNewContext(db, context)));
     }
 
     private static Context getNewContext(DatabaseDefinition db, Context context) {

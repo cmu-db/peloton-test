@@ -1,21 +1,22 @@
-package edu.cmu.cs.db.peloton.test.generate.defn.stochastic;
+package edu.cmu.cs.db.peloton.test.generate.defn;
 
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
 import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
 import edu.cmu.cs.db.peloton.test.generate.ast.Context;
-import edu.cmu.cs.db.peloton.test.generate.ast.stochastic.StochasticSumElem;
+import edu.cmu.cs.db.peloton.test.generate.ast.SumElem;
 import edu.cmu.cs.db.peloton.test.generate.util.RandomUtils;
 
 import java.sql.SQLType;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 
 /**
  * Created by tianyuli on 4/2/17.
  */
-public enum Aggregate implements Ast.StochasticElem {
+public enum Aggregate implements Ast.Elem {
     ;
     private final String name;
     private final Predicate<SQLType> applicability;
@@ -26,16 +27,16 @@ public enum Aggregate implements Ast.StochasticElem {
     }
 
     @Override
-    public Ast.Clause generate(DatabaseDefinition db, Context context, Random random) {
+    public Optional<Ast.Clause> generate(DatabaseDefinition db, Context context, Random random) {
         String table = RandomUtils.randomElement(context.valuesOf(Ast.Sort.TABLE), random);
         return null;
 
     }
 
-    public static Ast.StochasticElem all() {
-        return new StochasticSumElem() {
+    public static Ast.Elem all() {
+        return new SumElem() {
             @Override
-            protected List<Ast.StochasticElem> args() {
+            protected List<Ast.Elem> args() {
                 return Arrays.asList(Aggregate.values());
             }
         };
