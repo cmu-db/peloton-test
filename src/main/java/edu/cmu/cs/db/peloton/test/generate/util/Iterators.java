@@ -1,12 +1,10 @@
 package edu.cmu.cs.db.peloton.test.generate.util;
 
+import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
 import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
 import edu.cmu.cs.db.peloton.test.generate.ast.Context;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -126,5 +124,21 @@ public final class Iterators {
 
     private Iterators() {
         // should not instantiate
+    }
+
+    public static Iterator<String> fromAst(Ast.Elem elem, int limit, DatabaseDefinition db, Random random) {
+        return new Iterator<String>() {
+            private int i = 0;
+            @Override
+            public boolean hasNext() {
+                return i < limit;
+            }
+
+            @Override
+            public String next() {
+                i++;
+                return elem.generateUntilPresent(db, Context.EMPTY, random).getClause();
+            }
+        };
     }
 }

@@ -2,8 +2,8 @@ package edu.cmu.cs.db.peloton.test.app;
 
 import com.beust.jcommander.JCommander;
 import edu.cmu.cs.db.peloton.test.common.DatabaseWrapper;
-import edu.cmu.cs.db.peloton.test.generate.ast.Ast;
-import edu.cmu.cs.db.peloton.test.generate.defn.stochastic.Select;
+import edu.cmu.cs.db.peloton.test.generate.defn.Select;
+import edu.cmu.cs.db.peloton.test.generate.util.Iterators;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -35,13 +35,13 @@ public class Main {
         new JCommander(parsedArgs, args);
 
         try (BufferedReader config = new BufferedReader(new FileReader(parsedArgs.getConfigFile()))) {
-            testDb = new DatabaseWrapper(Collections.emptyMap(), config.readLine(), config.readLine(), config.readLine());
-            truthDb = new DatabaseWrapper(Collections.emptyMap(), config.readLine(), config.readLine(), config.readLine());
+            testDb = new DatabaseWrapper(config.readLine(), config.readLine(), config.readLine());
+            truthDb = new DatabaseWrapper(config.readLine(), config.readLine(), config.readLine());
         }
 
         batchSize = parsedArgs.getBatchSize();
         queryProvider = parsedArgs.getTraceFile() == null
-                ? Ast.fromAst(new Select(), parsedArgs.getLimit(),truthDb.getDatabaseDefinition(), new Random())
+                ? Iterators.fromAst(new Select(), parsedArgs.getLimit(),truthDb.getDatabaseDefinition(), new Random())
                 : Files.lines(Paths.get(parsedArgs.getTraceFile())).iterator();
 
         while (queryProvider.hasNext()) {

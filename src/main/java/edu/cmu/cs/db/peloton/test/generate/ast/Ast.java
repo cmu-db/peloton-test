@@ -1,16 +1,10 @@
 package edu.cmu.cs.db.peloton.test.generate.ast;
 
 import edu.cmu.cs.db.peloton.test.common.DatabaseDefinition;
-import edu.cmu.cs.db.peloton.test.generate.util.RandomUtils;
-
 import java.sql.JDBCType;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.*;
-import static edu.cmu.cs.db.peloton.test.generate.ast.Ast.ExpressionType.NUMERIC;
-import static edu.cmu.cs.db.peloton.test.generate.ast.Ast.ExpressionType.VARCHAR;
-import static edu.cmu.cs.db.peloton.test.generate.ast.Ast.ExpressionType.BOOLEAN;
 
 /**
  * Static Utility class that groups together various definitions in the
@@ -78,31 +72,54 @@ public final class Ast {
      */
     public interface Elem {
         /**
-         * Iterates through all valuesOf of this element given a context and depth. The depth
-         * limits the depth of generated ast to guard against infinite trees. The depth will
-         * only be applied to infinite types.
+         * Randomly generates a value of this type using the given random generator. If the generation failed because
+         * there is no value for the random walk down the tree, None is returned.
          *
          * @param db      The database that queries will run on
          * @param context the context
-         * @param depth   the limit to the depth of the ast we are generating for infinite types
-         * @return the iterator of all possible valuesOf of this type given the context
+         * @param random The random generator to be used
+         * @return an Optional clause of this elem
          */
-        Iterator<Clause> allClauses(DatabaseDefinition db, Context context, int depth);
-    }
+        Optional<Clause> generate(DatabaseDefinition db, Context context, Random random);
 
-    public interface StochasticElem {
-        Clause generate(DatabaseDefinition db, Context context, Random random);
+        default Clause generateUntilPresent(DatabaseDefinition db, Context context, Random random) {
+            while (true) {
+                Optional<Clause> generated = generate(db, context, random);
+                if (generated.isPresent()) {
+                    return generated.get();
+                }
+            }
+        }
     }
 
     /**
-     * Type of values in the ast
+     * Type of values in the ast, used as a lookup key type in context
      */
     public interface Type {
         // Marker interface
     }
 
     public enum ExpressionType implements Type {
-        NUMERIC, VARCHAR, BOOLEAN, ANY, SET;
+        NUMERIC, VARCHAR, BOOLEAN, ANY;
+
+        public static ExpressionType fromJDBCType(JDBCType type) {
+            // TODO research SQL types
+            switch (type) {
+                case DOUBLE:
+                case FLOAT:
+                case INTEGER:
+                case NUMERIC:
+                case DECIMAL:
+                    return NUMERIC;
+                case VARCHAR:
+                case LONGNVARCHAR:
+                    return VARCHAR;
+                case BOOLEAN:
+                    return BOOLEAN;
+                default:
+                    throw new IllegalArgumentException("Unimplemented");
+            }
+        }
 
         public boolean matches(ExpressionType type) {
             if (type == ANY) {
@@ -113,58 +130,6 @@ public final class Ast {
         }
     }
 
-    public static ExpressionType toExpressionType(JDBCType type) {
-        // TODO research SQL types
-        switch (type) {
-            case DOUBLE:
-            case FLOAT:
-            case INTEGER:
-            case NUMERIC:
-            case DECIMAL:
-                return NUMERIC;
-            case VARCHAR:
-            case LONGNVARCHAR:
-                return VARCHAR;
-            case BOOLEAN:
-                return BOOLEAN;
-            default:
-                throw new IllegalArgumentException("Unimplemented");
-        }
-    }
-
-    public static String constantOf(ExpressionType type, Random random) {
-        switch (type) {
-            case NUMERIC:
-                return Double.toString(random.nextDouble());
-            case VARCHAR:
-                int length = random.nextInt(10);
-                StringBuilder result = new StringBuilder("\"");
-                for (int i = 0; i < length; i++) {
-                    result.append((char) random.nextInt(26) + 'a');
-                }
-                result.append("\"");
-                return result.toString();
-            case BOOLEAN:
-                return random.nextBoolean() ? "TRUE" : "FALSE";
-            case ANY:
-                return constantOf(RandomUtils.randomElement(Arrays.asList(NUMERIC, VARCHAR, BOOLEAN), random), random);
-            default:
-                throw new IllegalArgumentException("Unimplemented");
-        }
-    }
-
-    public static String valueOf(DatabaseDefinition db, Context context, ExpressionType type, Random random) {
-        List<String> columns = context.valuesOf(Sort.TABLE).stream()
-                    .flatMap(t -> db.getTable(t).entrySet().stream()
-                            .filter(e -> toExpressionType(e.getValue().getType()).matches(type))
-                            .map(e -> t + "." + e.getKey()))
-                            .collect(Collectors.toList());
-            if (columns.isEmpty()) {
-                return constantOf(type, random);
-            }
-            return RandomUtils.randomElement(columns, random);
-    }
-
     /**
      * Sql language constructs
      */
@@ -172,22 +137,6 @@ public final class Ast {
         TABLE, COLUMN
     }
 
-
-    public static Iterator<String> fromAst(Ast.StochasticElem elem, int limit, DatabaseDefinition db, Random random) {
-        return new Iterator<String>() {
-            private int i = 0;
-            @Override
-            public boolean hasNext() {
-                return i < limit;
-            }
-
-            @Override
-            public String next() {
-                i++;
-                return elem.generate(db, Context.EMPTY, random).getClause();
-            }
-        };
-    }
 
     private Ast() {
         // Should not instantiate

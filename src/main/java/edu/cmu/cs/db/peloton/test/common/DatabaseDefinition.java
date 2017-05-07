@@ -15,20 +15,15 @@ public final class DatabaseDefinition {
 
     public static final class ColumnInfo {
         private final JDBCType type;
-        private final Hint valueHint;
 
-        ColumnInfo(JDBCType type, Hint valueHint) {
+        ColumnInfo(JDBCType type) {
             this.type = type;
-            this.valueHint = valueHint;
         }
 
         public JDBCType getType() {
             return type;
         }
 
-        public Hint getValueHint() {
-            return valueHint;
-        }
     }
 
     private DatabaseDefinition(Map<String, Map<String, ColumnInfo>> tables) {
@@ -74,11 +69,11 @@ public final class DatabaseDefinition {
          * @return self reference for method chaining
          * @throws IllegalStateException if no table is being defined
          */
-        public DatabaseDefinition.Builder column(String name, JDBCType type, Hint hint) {
+        public DatabaseDefinition.Builder column(String name, JDBCType type) {
             if (currTable == null) {
                 throw new IllegalStateException("No table being defined");
             }
-            columnsBuilder.put(name, new ColumnInfo(type, hint));
+            columnsBuilder.put(name, new ColumnInfo(type));
             return this;
         }
 

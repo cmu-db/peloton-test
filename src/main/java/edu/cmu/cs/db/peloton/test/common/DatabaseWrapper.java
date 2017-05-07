@@ -7,14 +7,12 @@ import java.util.Map;
  * Provide access to a database for the application
  */
 public class DatabaseWrapper implements AutoCloseable {
-    private Map<SQLType, Hint> valuePopulationHints;
     private Connection conn;
     private DatabaseDefinition definition;
     private final String dbString, username, password;
 
 
-    public DatabaseWrapper(Map<SQLType, Hint> hints, String dbString, String username, String password) {
-        this.valuePopulationHints = hints;
+    public DatabaseWrapper(String dbString, String username, String password) {
         conn = null;
         this.dbString = dbString;
         this.username = username;
@@ -81,7 +79,7 @@ public class DatabaseWrapper implements AutoCloseable {
         ResultSet columns = metaData.getColumns(null, null, table, null);
         while (columns.next()) {
             JDBCType type = JDBCType.valueOf(columns.getInt("DATA_TYPE"));
-            builder.column(columns.getString("COLUMN_NAME"), type, valuePopulationHints.get(type));
+            builder.column(columns.getString("COLUMN_NAME"), type);
         }
     }
 }
