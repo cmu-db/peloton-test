@@ -46,7 +46,7 @@ public class TestContainer {
         }
         else {
             Main.testDb.getConnection().createStatement().executeUpdate(query);
-	    Main.truthDb.getConnection().createStatement().executeUpdate(query);
+	        Main.truthDb.getConnection().createStatement().executeUpdate(query);
         }
     }
 
