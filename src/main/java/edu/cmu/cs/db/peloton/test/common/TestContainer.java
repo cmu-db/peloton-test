@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -39,8 +40,14 @@ public class TestContainer {
 
     @Test
     public void test() throws SQLException {
-        testEqual(Main.testDb.getConnection().createStatement().executeQuery(query),
-                Main.truthDb.getConnection().createStatement().executeQuery(query));
+        if (query.toUpperCase().startsWith("SELECT")) {
+            testEqual(Main.testDb.getConnection().createStatement().executeQuery(query),
+                    Main.truthDb.getConnection().createStatement().executeQuery(query));
+        }
+        else {
+            Main.testDb.getConnection().createStatement().executeUpdate(query);
+	    Main.truthDb.getConnection().createStatement().executeUpdate(query);
+        }
     }
 
     private static void testEqual(ResultSet truth, ResultSet target) throws SQLException {
@@ -60,7 +67,16 @@ public class TestContainer {
     private static List<Object> getRow(ResultSet resultSet, int columnCount) throws SQLException {
         List<Object> row = new ArrayList<>();
         for (int i = 1; i <= columnCount; i++) {
-            row.add(resultSet.getObject(i));
+            Object obj = resultSet.getObject(i);
+            if (obj instanceof Double) {
+                row.add(BigDecimal.valueOf((Double)obj));
+            }
+            else if (obj instanceof Float) {
+                row.add(BigDecimal.valueOf((Float)obj));
+            }
+            else {
+                row.add(obj);
+            }
         }
         return row;
     }
