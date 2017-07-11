@@ -13,7 +13,7 @@ peloton_password = ""
 trace_file_root = "trace"
 
 # peloton-test path
-peloton_test_path = "peloton-test"
+peloton_test_path = "../"
 
 # log file
 peloton_log_file = "peloton_log"
