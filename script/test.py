@@ -80,7 +80,7 @@ def wait_for_peloton_ready():
       time.sleep(1)
 
 def main():
-  global tmp_dir, tmp_config, tmp_sql_file
+  global peloton_path, tmp_dir, tmp_config, tmp_sql_file
 
   work_path = os.path.abspath(".")
   peloton_path = os.path.abspath(peloton_path)
