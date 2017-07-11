@@ -1,6 +1,0 @@
-jdbc:postgresql://127.0.0.1:23333/
-
-
-jdbc:postgresql://127.0.0.1:5432/test
-test_peloton
-test_peloton
