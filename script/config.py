@@ -4,7 +4,7 @@ pg_username = "test_peloton"
 pg_password = "test_peloton"
 
 # parameters for connecting to postgresql
-peloton_path = "../../peloton/build/bin/peloton"
+peloton_path = "../../build/bin/peloton"
 peloton_port = 23333
 peloton_username = ""
 peloton_password = ""
