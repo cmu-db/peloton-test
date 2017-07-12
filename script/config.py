@@ -20,17 +20,8 @@ peloton_log_file = "peloton_log"
 peloton_test_log_file = "test_log"
 
 # trace files
-traces = [
-    "sqllite/test/select1.test",
-  ]
+traces = map(lambda x: x.strip(), open("trace_files").readlines())
 
 # sql keyword filter
 # ** in upper case **
-kw_filter = [
-    "CASE",
-    "BETWEEN",
-    "<>",
-    "IS",
-    "\\(SELECT",
-    "ABS",
-  ]
+kw_filter = map(lambda x: x.strip(), open("keyword_filter").readlines())

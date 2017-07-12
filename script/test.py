@@ -2,6 +2,7 @@
 
 import os
 import re
+import sys
 import socket
 import time
 from config import *
@@ -102,6 +103,7 @@ def main():
       print "=============================================================="
       print "test: ", path
       print "=============================================================="
+      sys.stdout.flush()
 
       os.system("dropdb --if-exist -U %s -w %s" % (pg_username, pg_database))
       os.system("createdb -U %s -w %s" % (pg_username, pg_database))
@@ -112,7 +114,7 @@ def main():
       wait_for_peloton_ready()
 
       os.chdir(peloton_test_path)
-      test = Popen(["bash", "run.sh", "-config", tmp_config, "-trace", tmp_sql_file],
+      test = Popen(["bash", "run.sh", "-config", tmp_config, "-trace", tmp_sql_file, "-out", "test_out", "-batchsize", "100"],
 		    stdout=test_log, stderr=test_log)
       test.wait()
       os.chdir(work_path)
