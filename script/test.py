@@ -98,26 +98,25 @@ def main():
 
   try:
     for path in traces:
-      for f in files:
-	extract_sql(path, tmp_sql_file)
-	print "=============================================================="
-	print "test: ", path
-	print "=============================================================="
+      extract_sql(path, tmp_sql_file)
+      print "=============================================================="
+      print "test: ", path
+      print "=============================================================="
 
-	os.system("dropdb --if-exist -U %s -w %s" % (pg_username, pg_database))
-	os.system("createdb -U %s -w %s" % (pg_username, pg_database))
+      os.system("dropdb --if-exist -U %s -w %s" % (pg_username, pg_database))
+      os.system("createdb -U %s -w %s" % (pg_username, pg_database))
 
-	peloton = Popen([peloton_path, "-port", str(peloton_port)], 
-			stdout=peloton_log, stderr=peloton_log)
+      peloton = Popen([peloton_path, "-port", str(peloton_port)], 
+		      stdout=peloton_log, stderr=peloton_log)
 
-	wait_for_peloton_ready()
+      wait_for_peloton_ready()
 
-	os.chdir(peloton_test_path)
-	test = Popen(["bash", "run.sh", "-config", tmp_config, "-trace", tmp_sql_file],
-		      stdout=test_log, stderr=test_log)
-	test.wait()
-	os.chdir(work_path)
-	peloton.kill()
+      os.chdir(peloton_test_path)
+      test = Popen(["bash", "run.sh", "-config", tmp_config, "-trace", tmp_sql_file],
+		    stdout=test_log, stderr=test_log)
+      test.wait()
+      os.chdir(work_path)
+      peloton.kill()
   except Exception as e:
     print e
   finally:
