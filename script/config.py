@@ -4,7 +4,7 @@ pg_username = "jenkins"
 pg_password = "jenkinsTest123"
 
 # parameters for connecting to postgresql
-peloton_path = "peloton"
+peloton_path = "../../build/bin/peloton"
 peloton_port = 52726
 peloton_username = ""
 peloton_password = ""

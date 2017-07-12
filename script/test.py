@@ -83,7 +83,6 @@ def main():
   global peloton_path, tmp_dir, tmp_config, tmp_sql_file
 
   work_path = os.path.abspath(".")
-  peloton_path = os.path.abspath(peloton_path)
   tmp_config = os.path.abspath(tmp_config)
   tmp_sql_file = os.path.abspath(tmp_sql_file)
   test_log_file = os.path.abspath(peloton_test_log_file)
