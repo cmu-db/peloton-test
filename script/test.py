@@ -97,9 +97,8 @@ def main():
   print_log = Popen(["tail", "-f", test_log_file])
 
   try:
-    for par, dirs, files in os.walk(trace_file_root):
+    for path in traces:
       for f in files:
-	path = os.path.join(par, f)
 	extract_sql(path, tmp_sql_file)
 	print "=============================================================="
 	print "test: ", path

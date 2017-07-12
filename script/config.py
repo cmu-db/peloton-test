@@ -19,6 +19,11 @@ peloton_test_path = "../"
 peloton_log_file = "peloton_log"
 peloton_test_log_file = "test_log"
 
+# trace files
+traces = [
+    "sqllite/test/select1.test",
+  ]
+
 # sql keyword filter
 # ** in upper case **
 kw_filter = [
