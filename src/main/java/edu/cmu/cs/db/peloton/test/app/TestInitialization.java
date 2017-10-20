@@ -21,6 +21,7 @@ public class TestInitialization {
      */
     public static void runSetupTraceIfExists(String setupTraceFile)
         throws SQLException, IOException {
+        if(setupTraceFile == null) return;
         try (BufferedReader setupTrace = new BufferedReader(new FileReader(setupTraceFile))) {
             String query;
             while ((query = setupTrace.readLine()) != null) {
