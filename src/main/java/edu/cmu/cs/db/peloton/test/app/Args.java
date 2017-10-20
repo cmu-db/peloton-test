@@ -15,6 +15,10 @@ public class Args {
             description = "path to trace file with one query per line to execute")
     private String traceFile;
 
+    @Parameter(names = "-setupTrace",
+            description = "path to a trace file with CREATE/INSERT/UPDATE queries to initialize table contents")
+    private String setupTraceFile;
+
     @Parameter(names = "-out",
             description = "path to output dir, if empty then just print to command line")
     private String outDir;
@@ -32,6 +36,10 @@ public class Args {
 
     public String getTraceFile() {
         return traceFile;
+    }
+
+    public String getSetupTraceFile() {
+        return setupTraceFile;
     }
 
     public String getOutDir() {

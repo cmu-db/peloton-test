@@ -1,3 +1,4 @@
 SELECT * FROM foo
 SELECT * FROM bar
 SELECT * FROM foo
+SELECT * FROM foobar;
