@@ -39,6 +39,8 @@ public class Main {
             truthDb = new DatabaseWrapper(config.readLine(), config.readLine(), config.readLine());
         }
 
+        TestInitialization.runSetupTraceIfExists(parsedArgs.getSetupTraceFile());
+
         batchSize = parsedArgs.getBatchSize();
         queryProvider = parsedArgs.getTraceFile() == null
                 ? Iterators.fromAst(new Select(), parsedArgs.getLimit(),truthDb.getDatabaseDefinition(), new Random())
